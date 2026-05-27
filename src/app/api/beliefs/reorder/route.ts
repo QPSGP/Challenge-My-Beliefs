@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { handleApiError } from "@/lib/api-errors";
 import { isFounderAuthorized } from "@/lib/auth";
+import { PersistenceNotConfiguredError } from "@/lib/persistence";
 import { reorderBeliefs } from "@/lib/store";
 import type { ReorderBeliefsInput } from "@/lib/types";
 
@@ -19,6 +21,9 @@ export async function PUT(request: Request) {
     const beliefs = await reorderBeliefs(body.ids);
     return NextResponse.json({ beliefs });
   } catch (error) {
+    if (error instanceof PersistenceNotConfiguredError) {
+      return handleApiError(error);
+    }
     const message = error instanceof Error ? error.message : "Could not reorder beliefs";
     return NextResponse.json({ error: message }, { status: 400 });
   }

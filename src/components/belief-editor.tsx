@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { FounderKeyBar } from "@/components/founder-key-bar";
+import { readApiError } from "@/lib/api-client";
 import { founderHeaders } from "@/lib/founder-client";
 import { outcomeLabels } from "@/lib/outcome-styles";
 import type { Belief, BeliefOutcome } from "@/lib/types";
@@ -57,17 +58,15 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
         }),
       });
 
-      const data = (await response.json()) as { error?: string };
-
       if (!response.ok) {
-        setError(data.error ?? "Could not save belief. Check your founder key.");
+        setError(await readApiError(response));
         return;
       }
 
       setMessage("Belief saved. Public page updated.");
       router.refresh();
-    } catch {
-      setError("Network error. Please try again.");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -92,17 +91,15 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
         headers: founderHeaders(founderKey),
       });
 
-      const data = (await response.json()) as { error?: string };
-
       if (!response.ok) {
-        setError(data.error ?? "Could not delete belief.");
+        setError(await readApiError(response));
         return;
       }
 
       router.push("/admin");
       router.refresh();
-    } catch {
-      setError("Network error. Please try again.");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Network error. Please try again.");
     } finally {
       setIsDeleting(false);
     }

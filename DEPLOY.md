@@ -88,6 +88,21 @@ In Vercel → **Settings** → **Environment Variables**:
 
 Redeploy after adding or changing variables.
 
-## 5. Data on Vercel
+## 5. Enable saves on Vercel (required for founder edits)
 
-JSON files in `data/` are read from the repo on deploy. **Writes** (challenges, founder edits) still need a database before they persist on the live site.
+Vercel cannot write to `data/*.json` on disk. The app uses **Vercel Blob** for live saves.
+
+### One-time setup
+
+1. Vercel dashboard → your project **challenge-my-beliefs**
+2. **Storage** tab → **Create Database** → choose **Blob**
+3. Name it (e.g. `cmb-data`) → **Create**
+4. When asked, **connect to challenge-my-beliefs** (all environments)
+5. Vercel adds `BLOB_READ_WRITE_TOKEN` automatically
+6. **Redeploy** the latest `main` branch (Deployments → … → Redeploy)
+
+After redeploy, founder **Save belief** works on the live site.
+
+### Local development
+
+No Blob needed. Saves go to `data/beliefs.json` and `data/challenges.json` as before.

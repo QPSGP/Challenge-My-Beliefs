@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { handleApiError } from "@/lib/api-errors";
 import { isFounderAuthorized } from "@/lib/auth";
 import { createChallenge, getChallenges, markChallengeReviewed } from "@/lib/store";
 import type { CreateChallengeInput } from "@/lib/types";
@@ -29,27 +30,34 @@ export async function POST(request: Request) {
   try {
     const challenge = await createChallenge(body);
     return NextResponse.json({ challenge }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Belief not found" }, { status: 404 });
+  } catch (error) {
+    if (error instanceof Error && error.message === "Belief not found") {
+      return NextResponse.json({ error: "Belief not found" }, { status: 404 });
+    }
+    return handleApiError(error);
   }
 }
 
 export async function PATCH(request: Request) {
-  if (!isFounderAuthorized(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    if (!isFounderAuthorized(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = (await request.json()) as { id?: string };
+
+    if (!body.id?.trim()) {
+      return NextResponse.json({ error: "Challenge id is required" }, { status: 400 });
+    }
+
+    const challenge = await markChallengeReviewed(body.id);
+
+    if (!challenge) {
+      return NextResponse.json({ error: "Challenge not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ challenge });
+  } catch (error) {
+    return handleApiError(error);
   }
-
-  const body = (await request.json()) as { id?: string };
-
-  if (!body.id?.trim()) {
-    return NextResponse.json({ error: "Challenge id is required" }, { status: 400 });
-  }
-
-  const challenge = await markChallengeReviewed(body.id);
-
-  if (!challenge) {
-    return NextResponse.json({ error: "Challenge not found" }, { status: 404 });
-  }
-
-  return NextResponse.json({ challenge });
 }

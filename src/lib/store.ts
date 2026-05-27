@@ -1,7 +1,10 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
-
 import { slugify } from "@/lib/slug";
+import {
+  readBeliefsJson,
+  readChallengesJson,
+  writeBeliefsJson,
+  writeChallengesJson,
+} from "@/lib/persistence";
 import type {
   Belief,
   Challenge,
@@ -12,21 +15,8 @@ import type {
   UpdateBeliefRulingInput,
 } from "@/lib/types";
 
-const dataDir = path.join(process.cwd(), "data");
-const beliefsPath = path.join(dataDir, "beliefs.json");
-const challengesPath = path.join(dataDir, "challenges.json");
-
-async function readJsonFile<T>(filePath: string): Promise<T> {
-  const raw = await fs.readFile(filePath, "utf8");
-  return JSON.parse(raw) as T;
-}
-
-async function writeJsonFile<T>(filePath: string, data: T): Promise<void> {
-  await fs.writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
-}
-
 export async function getBeliefs(): Promise<Belief[]> {
-  return readJsonFile<Belief[]>(beliefsPath);
+  return readBeliefsJson<Belief[]>();
 }
 
 export async function getBeliefById(id: string): Promise<Belief | undefined> {
@@ -63,7 +53,7 @@ export async function createBelief(input: CreateBeliefInput): Promise<Belief> {
   };
 
   beliefs.push(belief);
-  await writeJsonFile(beliefsPath, beliefs);
+  await writeBeliefsJson(beliefs);
   return belief;
 }
 
@@ -92,7 +82,7 @@ export async function reorderBeliefs(ids: string[]): Promise<Belief[]> {
     throw new Error("Order must include every belief exactly once");
   }
 
-  await writeJsonFile(beliefsPath, reordered);
+  await writeBeliefsJson(reordered);
   return reordered;
 }
 
@@ -115,7 +105,7 @@ export async function updateBeliefRuling(
   };
 
   beliefs[index] = updated;
-  await writeJsonFile(beliefsPath, beliefs);
+  await writeBeliefsJson(beliefs);
   return updated;
 }
 
@@ -160,7 +150,7 @@ export async function updateBelief(
   };
 
   beliefs[index] = updated;
-  await writeJsonFile(beliefsPath, beliefs);
+  await writeBeliefsJson(beliefs);
   return updated;
 }
 
@@ -172,17 +162,17 @@ export async function deleteBelief(id: string): Promise<boolean> {
     return false;
   }
 
-  await writeJsonFile(beliefsPath, filtered);
+  await writeBeliefsJson(filtered);
 
-  const challenges = await readJsonFile<Challenge[]>(challengesPath);
+  const challenges = await readChallengesJson<Challenge[]>();
   const remaining = challenges.filter((challenge) => challenge.beliefId !== id);
-  await writeJsonFile(challengesPath, remaining);
+  await writeChallengesJson(remaining);
 
   return true;
 }
 
 export async function getChallenges(beliefId?: string): Promise<Challenge[]> {
-  const challenges = await readJsonFile<Challenge[]>(challengesPath);
+  const challenges = await readChallengesJson<Challenge[]>();
 
   if (!beliefId) {
     return challenges;
@@ -198,7 +188,7 @@ export async function createChallenge(input: CreateChallengeInput): Promise<Chal
     throw new Error("Belief not found");
   }
 
-  const challenges = await readJsonFile<Challenge[]>(challengesPath);
+  const challenges = await readChallengesJson<Challenge[]>();
   const challenge: Challenge = {
     id: `challenge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     beliefId: input.beliefId,
@@ -212,12 +202,12 @@ export async function createChallenge(input: CreateChallengeInput): Promise<Chal
   };
 
   challenges.unshift(challenge);
-  await writeJsonFile(challengesPath, challenges);
+  await writeChallengesJson(challenges);
   return challenge;
 }
 
 export async function markChallengeReviewed(id: string): Promise<Challenge | undefined> {
-  const challenges = await readJsonFile<Challenge[]>(challengesPath);
+  const challenges = await readChallengesJson<Challenge[]>();
   const index = challenges.findIndex((challenge) => challenge.id === id);
 
   if (index === -1) {
@@ -229,6 +219,6 @@ export async function markChallengeReviewed(id: string): Promise<Challenge | und
     status: "reviewed",
   };
 
-  await writeJsonFile(challengesPath, challenges);
+  await writeChallengesJson(challenges);
   return challenges[index];
 }
