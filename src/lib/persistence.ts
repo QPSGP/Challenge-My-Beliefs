@@ -49,9 +49,9 @@ async function readBlobJson<T>(pathname: string, localFallbackPath: string): Pro
 
     return (await response.json()) as T;
   } catch {
-    const seeded = await readLocalJson<T>(localFallbackPath);
-    await writeBlobJson(pathname, seeded);
-    return seeded;
+    // Read from bundled repo files when blob is empty or unavailable.
+    // Do not write during a read — that was causing server errors on Vercel.
+    return readLocalJson<T>(localFallbackPath);
   }
 }
 
