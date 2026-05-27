@@ -4,6 +4,7 @@ export type Belief = {
   id: string;
   title: string;
   statement: string;
+  category: string;
   confidence: string;
   evidence: string[];
   disproof: string;
@@ -43,6 +44,7 @@ export type UpdateBeliefRulingInput = {
 export type EditBeliefContentInput = {
   title: string;
   statement: string;
+  category: string;
   confidence: string;
   evidence: string[];
   disproof: string;
@@ -56,6 +58,7 @@ export type UpdateBeliefInput = EditBeliefContentInput & {
 export type CreateBeliefInput = {
   title: string;
   statement: string;
+  category: string;
   confidence: string;
   evidence: string[];
   disproof: string;

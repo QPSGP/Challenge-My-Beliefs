@@ -97,6 +97,9 @@ export function BeliefOrderEditor({ beliefs, founderKey, onMessage }: BeliefOrde
               <span className="w-8 text-sm font-semibold text-sky-300">{index + 1}</span>
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-white">{belief.title}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-violet-300">
+                  {belief.category}
+                </p>
                 <p className="mt-1 truncate text-sm text-slate-400">{belief.statement}</p>
               </div>
               <div className="flex gap-2">

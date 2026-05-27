@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { CategoryBadge } from "@/components/category-badge";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import type { Belief } from "@/lib/types";
 
@@ -15,6 +16,9 @@ export function BeliefCard({ belief, linkToDetail = true }: BeliefCardProps) {
         <div>
           <p className="text-sm uppercase tracking-[0.22em] text-slate-400">Belief Card</p>
           <h3 className="mt-2 text-2xl font-semibold text-white">{belief.title}</h3>
+          <div className="mt-3">
+            <CategoryBadge category={belief.category} linkToFilter />
+          </div>
         </div>
         <OutcomeBadge outcome={belief.outcome} />
       </div>

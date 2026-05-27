@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { CategoryField } from "@/components/category-field";
 import { founderHeaders } from "@/lib/founder-client";
 
 type AddBeliefFormProps = {
@@ -13,6 +14,7 @@ type AddBeliefFormProps = {
 type FormState = {
   title: string;
   statement: string;
+  category: string;
   confidence: string;
   evidence: string;
   disproof: string;
@@ -21,6 +23,7 @@ type FormState = {
 const initialState: FormState = {
   title: "",
   statement: "",
+  category: "Individual Rights",
   confidence: "High",
   evidence: "",
   disproof: "",
@@ -48,6 +51,7 @@ export function AddBeliefForm({ founderKey, onMessage }: AddBeliefFormProps) {
         body: JSON.stringify({
           title: form.title,
           statement: form.statement,
+          category: form.category,
           confidence: form.confidence,
           evidence: form.evidence
             .split("\n")
@@ -110,6 +114,12 @@ export function AddBeliefForm({ founderKey, onMessage }: AddBeliefFormProps) {
           placeholder="I believe that..."
         />
       </label>
+
+      <CategoryField
+        value={form.category}
+        onChange={(category) => setForm((current) => ({ ...current, category }))}
+        fieldClass={fieldClass}
+      />
 
       <label className="block text-sm text-slate-300">
         Confidence

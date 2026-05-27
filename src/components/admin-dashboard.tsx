@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { AddBeliefForm } from "@/components/add-belief-form";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
+import { CategoryBadge } from "@/components/category-badge";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import { founderHeaders, getFounderKey, setFounderKey } from "@/lib/founder-client";
 import type { Belief, Challenge } from "@/lib/types";
@@ -114,7 +115,10 @@ export function AdminDashboard({
                     #{index + 1}
                   </p>
                   <p className="mt-1 font-medium text-white">{belief.title}</p>
-                  <p className="mt-1 truncate text-sm text-slate-400">{belief.statement}</p>
+                  <div className="mt-2">
+                    <CategoryBadge category={belief.category} />
+                  </div>
+                  <p className="mt-2 truncate text-sm text-slate-400">{belief.statement}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <OutcomeBadge outcome={belief.outcome} />

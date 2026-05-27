@@ -75,6 +75,7 @@ export async function PUT(request: Request, context: RouteContext) {
     const belief = await updateBelief(id, {
       title: body.title,
       statement: body.statement,
+      category: body.category ?? "Uncategorized",
       confidence: body.confidence ?? "Medium",
       evidence: Array.isArray(body.evidence) ? body.evidence : [],
       disproof: body.disproof ?? "",

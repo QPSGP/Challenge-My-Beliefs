@@ -3,6 +3,7 @@
     "id": "individual-life-and-property",
     "title": "Life and property of the individual",
     "statement": "I believe that the life and property of the individual.",
+    "category": "Individual Rights",
     "confidence": "High",
     "evidence": [],
     "disproof": "",
@@ -14,6 +15,7 @@
     "id": "objective-reality",
     "title": "Reality is the final test",
     "statement": "A belief should not change because of pressure, popularity, or emotion alone. It should change when reality shows it is false.",
+    "category": "Philosophy & Reasoning",
     "confidence": "High",
     "evidence": [
       "Truth claims need standards outside personal preference.",
@@ -28,6 +30,7 @@
     "id": "contextual-honesty",
     "title": "Context matters as much as facts",
     "statement": "Raw facts can mislead when stripped from timing, incentives, or surrounding conditions. Honest interpretation requires context.",
+    "category": "Philosophy & Reasoning",
     "confidence": "High",
     "evidence": [
       "The same statistic can support opposite conclusions when context is hidden.",
@@ -42,6 +45,7 @@
     "id": "changing-mind",
     "title": "Changing your mind is strength",
     "statement": "When better evidence appears, revising a belief is a sign of intellectual integrity, not weakness.",
+    "category": "Philosophy & Reasoning",
     "confidence": "Medium",
     "evidence": [
       "Stubborn consistency often protects identity rather than truth.",

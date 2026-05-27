@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { CategoryBadge } from "@/components/category-badge";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import type { Belief } from "@/lib/types";
 
@@ -20,6 +21,10 @@ export function LeadBeliefSpotlight({ belief }: LeadBeliefSpotlightProps) {
       <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
         {belief.title}
       </h2>
+
+      <div className="mt-3">
+        <CategoryBadge category={belief.category} linkToFilter />
+      </div>
 
       <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-200">{belief.statement}</p>
 

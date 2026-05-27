@@ -1,3 +1,4 @@
+import { normalizeCategory } from "@/lib/categories";
 import { slugify } from "@/lib/slug";
 import {
   readBeliefsJson,
@@ -15,8 +16,16 @@ import type {
   UpdateBeliefRulingInput,
 } from "@/lib/types";
 
+function normalizeBelief(belief: Belief): Belief {
+  return {
+    ...belief,
+    category: normalizeCategory(belief.category),
+  };
+}
+
 export async function getBeliefs(): Promise<Belief[]> {
-  return readBeliefsJson<Belief[]>();
+  const beliefs = await readBeliefsJson<Belief[]>();
+  return beliefs.map(normalizeBelief);
 }
 
 export async function getBeliefById(id: string): Promise<Belief | undefined> {
@@ -44,6 +53,7 @@ export async function createBelief(input: CreateBeliefInput): Promise<Belief> {
     id: await uniqueBeliefId(input.title),
     title: input.title.trim(),
     statement: input.statement.trim(),
+    category: normalizeCategory(input.category),
     confidence: input.confidence.trim() || "Medium",
     evidence: input.evidence.filter((item) => item.trim().length > 0),
     disproof: input.disproof.trim(),
@@ -141,6 +151,7 @@ export async function updateBelief(
     ...beliefs[index],
     title: input.title.trim(),
     statement: input.statement.trim(),
+    category: normalizeCategory(input.category),
     confidence: input.confidence.trim() || "Medium",
     evidence: input.evidence.filter((item) => item.trim().length > 0),
     disproof: input.disproof.trim(),

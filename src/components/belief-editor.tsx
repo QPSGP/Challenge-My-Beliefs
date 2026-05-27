@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { CategoryField } from "@/components/category-field";
 import { FounderKeyBar } from "@/components/founder-key-bar";
 import { readApiError } from "@/lib/api-client";
 import { founderHeaders } from "@/lib/founder-client";
@@ -21,6 +22,7 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
   const [founderKey, setFounderKey] = useState("");
   const [title, setTitle] = useState(belief.title);
   const [statement, setStatement] = useState(belief.statement);
+  const [category, setCategory] = useState(belief.category);
   const [confidence, setConfidence] = useState(belief.confidence);
   const [evidence, setEvidence] = useState(belief.evidence.join("\n"));
   const [disproof, setDisproof] = useState(belief.disproof);
@@ -47,6 +49,7 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
         body: JSON.stringify({
           title,
           statement,
+          category,
           confidence,
           evidence: evidence
             .split("\n")
@@ -152,6 +155,8 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
             placeholder="I believe that..."
           />
         </label>
+
+        <CategoryField value={category} onChange={setCategory} fieldClass={fieldClass} />
 
         <label className="block text-sm text-slate-300">
           Confidence

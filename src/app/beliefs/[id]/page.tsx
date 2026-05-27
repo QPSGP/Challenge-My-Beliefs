@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { CategoryBadge } from "@/components/category-badge";
 import { ChallengeForm } from "@/components/challenge-form";
 import { ChallengeList } from "@/components/challenge-list";
 import { FounderEditBanner } from "@/components/founder-edit-banner";
@@ -38,6 +39,9 @@ export default async function BeliefDetailPage({ params }: BeliefDetailPageProps
             <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white">
               {belief.title}
             </h1>
+            <div className="mt-3">
+              <CategoryBadge category={belief.category} linkToFilter />
+            </div>
           </div>
           <OutcomeBadge outcome={belief.outcome} />
         </div>
