@@ -1,0 +1,55 @@
+[
+  {
+    "id": "individual-life-and-property",
+    "title": "Life and property of the individual",
+    "statement": "I believe that the life and property of the individual.",
+    "confidence": "High",
+    "evidence": [],
+    "disproof": "",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T00:00:00.000Z"
+  },
+  {
+    "id": "objective-reality",
+    "title": "Reality is the final test",
+    "statement": "A belief should not change because of pressure, popularity, or emotion alone. It should change when reality shows it is false.",
+    "confidence": "High",
+    "evidence": [
+      "Truth claims need standards outside personal preference.",
+      "Stable reasoning becomes possible when evidence can overrule ego."
+    ],
+    "disproof": "Show a class of important beliefs where objective evidence and observed outcomes should not carry decisive weight.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T00:00:00.000Z"
+  },
+  {
+    "id": "contextual-honesty",
+    "title": "Context matters as much as facts",
+    "statement": "Raw facts can mislead when stripped from timing, incentives, or surrounding conditions. Honest interpretation requires context.",
+    "confidence": "High",
+    "evidence": [
+      "The same statistic can support opposite conclusions when context is hidden.",
+      "Most bad-faith arguments rely on selective framing instead of full reality."
+    ],
+    "disproof": "Show that context regularly makes reasoning less accurate instead of more accurate in high-stakes decisions.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T00:00:00.000Z"
+  },
+  {
+    "id": "changing-mind",
+    "title": "Changing your mind is strength",
+    "statement": "When better evidence appears, revising a belief is a sign of intellectual integrity, not weakness.",
+    "confidence": "Medium",
+    "evidence": [
+      "Stubborn consistency often protects identity rather than truth.",
+      "Public reasoning improves when updates are rewarded instead of mocked."
+    ],
+    "disproof": "Show that belief revision predictably harms trust even when the new position is better supported.",
+    "outcome": "refined",
+    "rulingNote": "Refined to emphasize public trust grows when reasoning is visible, not when you never update.",
+    "updatedAt": "2026-05-27T00:00:00.000Z"
+  }
+]
