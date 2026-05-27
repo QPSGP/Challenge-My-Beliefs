@@ -96,7 +96,7 @@ Vercel cannot write to `data/*.json` on disk. The app uses **Vercel Blob** for l
 
 1. Vercel dashboard → your project **challenge-my-beliefs**
 2. **Storage** tab → **Create Database** → choose **Blob**
-3. Name it (e.g. `cmb-data`) → **Create**
+3. Name it (e.g. `cmb-data`) → **Create** (public or **private** store both work)
 4. When asked, **connect to challenge-my-beliefs** (all environments)
 5. Vercel adds `BLOB_READ_WRITE_TOKEN` automatically
 6. **Redeploy** the latest `main` branch (Deployments → … → Redeploy)

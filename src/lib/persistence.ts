@@ -1,4 +1,4 @@
-import { head, put } from "@vercel/blob";
+import { get, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
@@ -7,6 +7,7 @@ const challengesPath = path.join(process.cwd(), "data", "challenges.json");
 
 const BLOB_BELIEFS = "cmb/beliefs.json";
 const BLOB_CHALLENGES = "cmb/challenges.json";
+const BLOB_ACCESS = "private" as const;
 
 export class PersistenceNotConfiguredError extends Error {
   constructor() {
@@ -40,26 +41,26 @@ async function writeLocalJson<T>(filePath: string, data: T): Promise<void> {
 
 async function readBlobJson<T>(pathname: string, localFallbackPath: string): Promise<T> {
   try {
-    const meta = await head(pathname);
-    const response = await fetch(meta.url);
+    const result = await get(pathname, { access: BLOB_ACCESS });
 
-    if (!response.ok) {
-      throw new Error("Failed to read blob");
+    if (!result?.stream) {
+      throw new Error("Blob not found");
     }
 
-    return (await response.json()) as T;
+    const text = await new Response(result.stream).text();
+    return JSON.parse(text) as T;
   } catch {
     // Read from bundled repo files when blob is empty or unavailable.
-    // Do not write during a read — that was causing server errors on Vercel.
     return readLocalJson<T>(localFallbackPath);
   }
 }
 
 async function writeBlobJson<T>(pathname: string, data: T): Promise<void> {
   await put(pathname, `${JSON.stringify(data, null, 2)}\n`, {
-    access: "public",
+    access: BLOB_ACCESS,
     addRandomSuffix: false,
     allowOverwrite: true,
+    contentType: "application/json",
   });
 }
 
