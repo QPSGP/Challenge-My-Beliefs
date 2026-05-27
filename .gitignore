@@ -8,7 +8,9 @@ yarn-error.log*
 pnpm-debug.log*
 
 # local env files
-.env*
+.env
+.env.local
+.env.*.local
 
 # macOS / Windows
 .DS_Store
@@ -17,3 +19,6 @@ Thumbs.db
 # build output
 out/
 coverage/
+
+# cursor hook logs
+.cursor/git-sync.log

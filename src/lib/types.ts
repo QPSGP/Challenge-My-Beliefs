@@ -35,7 +35,20 @@ export type CreateChallengeInput = {
   sources?: string;
 };
 
-export type UpdateBeliefInput = {
+export type UpdateBeliefRulingInput = {
+  outcome: BeliefOutcome;
+  rulingNote?: string;
+};
+
+export type EditBeliefContentInput = {
+  title: string;
+  statement: string;
+  confidence: string;
+  evidence: string[];
+  disproof: string;
+};
+
+export type UpdateBeliefInput = EditBeliefContentInput & {
   outcome: BeliefOutcome;
   rulingNote?: string;
 };

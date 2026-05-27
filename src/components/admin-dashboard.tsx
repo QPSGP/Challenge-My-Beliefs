@@ -1,15 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { AddBeliefForm } from "@/components/add-belief-form";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
+import { OutcomeBadge } from "@/components/outcome-badge";
 import { founderHeaders, getFounderKey, setFounderKey } from "@/lib/founder-client";
-import { outcomeLabels } from "@/lib/outcome-styles";
-import type { Belief, BeliefOutcome, Challenge } from "@/lib/types";
-
-const outcomes: BeliefOutcome[] = ["unchanged", "refined", "changed"];
+import type { Belief, Challenge } from "@/lib/types";
 
 type AdminDashboardProps = {
   initialBeliefs: Belief[];
@@ -22,42 +21,12 @@ export function AdminDashboard({
 }: AdminDashboardProps) {
   const router = useRouter();
   const [founderKey, setFounderKeyState] = useState("");
-  const [drafts, setDrafts] = useState<Record<string, { outcome: BeliefOutcome; rulingNote: string }>>(
-    () =>
-      Object.fromEntries(
-        initialBeliefs.map((belief) => [
-          belief.id,
-          { outcome: belief.outcome, rulingNote: belief.rulingNote },
-        ]),
-      ),
-  );
   const [message, setMessage] = useState("");
 
   const beliefOrderKey = initialBeliefs.map((belief) => belief.id).join("|");
   const pendingChallenges = initialChallenges.filter(
     (challenge) => challenge.status === "pending",
   );
-
-  async function saveBeliefRuling(beliefId: string) {
-    setMessage("");
-    const draft = drafts[beliefId];
-
-    const response = await fetch(`/api/beliefs/${beliefId}`, {
-      method: "PATCH",
-      headers: founderHeaders(founderKey),
-      body: JSON.stringify(draft),
-    });
-
-    const data = (await response.json()) as { error?: string };
-
-    if (!response.ok) {
-      setMessage(data.error ?? "Could not save ruling.");
-      return;
-    }
-
-    setMessage("Ruling saved.");
-    router.refresh();
-  }
 
   async function markReviewed(challengeId: string) {
     setMessage("");
@@ -79,24 +48,19 @@ export function AdminDashboard({
     router.refresh();
   }
 
-  const selectClass =
-    "mt-2 w-full rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-slate-100 outline-none focus:ring-2 focus:ring-sky-400/40";
-  const textareaClass = `${selectClass} min-h-24`;
-
   return (
     <div className="space-y-10">
       <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
         <h2 className="text-xl font-semibold text-white">Founder access</h2>
         <p className="mt-2 text-sm leading-6 text-slate-400">
-          Set a founder key if <code className="text-sky-300">FOUNDER_KEY</code> is configured in
-          your environment. Otherwise founder actions work locally without a key.
+          Save your key here once, then edit any belief below.
         </p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <input
             className="flex-1 rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-slate-100 outline-none focus:ring-2 focus:ring-sky-400/40"
             value={founderKey}
             onChange={(event) => setFounderKeyState(event.target.value)}
-            placeholder="Founder key (optional)"
+            placeholder="Founder key (optional locally)"
           />
           <button
             type="button"
@@ -129,68 +93,42 @@ export function AdminDashboard({
 
       <AddBeliefForm founderKey={founderKey} onMessage={setMessage} />
 
-      <section className="space-y-6">
-        <h2 className="text-2xl font-semibold text-white">Record belief rulings</h2>
-        {initialBeliefs.map((belief) => (
-          <article
-            key={belief.id}
-            className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
-          >
-            <h3 className="text-xl font-semibold text-white">{belief.title}</h3>
-            <p className="mt-2 text-sm text-slate-400">{belief.statement}</p>
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold text-white">Edit a specific belief</h2>
+        <p className="text-sm text-slate-400">
+          Open any belief to change its statement, evidence, disproof standard, and ruling in one
+          place.
+        </p>
 
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
-              <label className="block text-sm text-slate-300">
-                Outcome
-                <select
-                  className={selectClass}
-                  value={drafts[belief.id]?.outcome ?? belief.outcome}
-                  onChange={(event) =>
-                    setDrafts((current) => ({
-                      ...current,
-                      [belief.id]: {
-                        ...current[belief.id],
-                        outcome: event.target.value as BeliefOutcome,
-                      },
-                    }))
-                  }
-                >
-                  {outcomes.map((outcome) => (
-                    <option key={outcome} value={outcome}>
-                      {outcomeLabels[outcome]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block text-sm text-slate-300 lg:col-span-2">
-                Ruling note (public reasoning for the outcome)
-                <textarea
-                  className={textareaClass}
-                  value={drafts[belief.id]?.rulingNote ?? ""}
-                  onChange={(event) =>
-                    setDrafts((current) => ({
-                      ...current,
-                      [belief.id]: {
-                        ...current[belief.id],
-                        rulingNote: event.target.value,
-                      },
-                    }))
-                  }
-                  placeholder="Why did this belief stay unchanged, become refined, or change?"
-                />
-              </label>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => void saveBeliefRuling(belief.id)}
-              className="mt-4 rounded-full border border-sky-400/40 bg-sky-400/15 px-5 py-2 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
-            >
-              Save ruling
-            </button>
-          </article>
-        ))}
+        {initialBeliefs.length === 0 ? (
+          <p className="text-sm text-slate-500">No beliefs yet.</p>
+        ) : (
+          <ul className="space-y-3">
+            {initialBeliefs.map((belief, index) => (
+              <li
+                key={belief.id}
+                className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-950/70 p-5"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-300">
+                    #{index + 1}
+                  </p>
+                  <p className="mt-1 font-medium text-white">{belief.title}</p>
+                  <p className="mt-1 truncate text-sm text-slate-400">{belief.statement}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <OutcomeBadge outcome={belief.outcome} />
+                  <Link
+                    href={`/admin/beliefs/${belief.id}`}
+                    className="rounded-full border border-sky-400/40 bg-sky-400/15 px-5 py-2 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
+                  >
+                    Edit belief
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="space-y-4">

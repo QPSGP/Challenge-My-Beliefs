@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "stop": [
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/git-sync.ps1 -HookMode",
+        "timeout": 120
+      }
+    ]
+  }
+}

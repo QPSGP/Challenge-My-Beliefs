@@ -7,7 +7,9 @@ import type {
   Challenge,
   CreateBeliefInput,
   CreateChallengeInput,
+  EditBeliefContentInput,
   UpdateBeliefInput,
+  UpdateBeliefRulingInput,
 } from "@/lib/types";
 
 const dataDir = path.join(process.cwd(), "data");
@@ -94,9 +96,9 @@ export async function reorderBeliefs(ids: string[]): Promise<Belief[]> {
   return reordered;
 }
 
-export async function updateBelief(
+export async function updateBeliefRuling(
   id: string,
-  input: UpdateBeliefInput,
+  input: UpdateBeliefRulingInput,
 ): Promise<Belief | undefined> {
   const beliefs = await getBeliefs();
   const index = beliefs.findIndex((belief) => belief.id === id);
@@ -115,6 +117,68 @@ export async function updateBelief(
   beliefs[index] = updated;
   await writeJsonFile(beliefsPath, beliefs);
   return updated;
+}
+
+export async function editBeliefContent(
+  id: string,
+  input: EditBeliefContentInput,
+): Promise<Belief | undefined> {
+  const existing = await getBeliefById(id);
+
+  if (!existing) {
+    return undefined;
+  }
+
+  return updateBelief(id, {
+    ...input,
+    outcome: existing.outcome,
+    rulingNote: existing.rulingNote,
+  });
+}
+
+export async function updateBelief(
+  id: string,
+  input: UpdateBeliefInput,
+): Promise<Belief | undefined> {
+  const beliefs = await getBeliefs();
+  const index = beliefs.findIndex((belief) => belief.id === id);
+
+  if (index === -1) {
+    return undefined;
+  }
+
+  const updated: Belief = {
+    ...beliefs[index],
+    title: input.title.trim(),
+    statement: input.statement.trim(),
+    confidence: input.confidence.trim() || "Medium",
+    evidence: input.evidence.filter((item) => item.trim().length > 0),
+    disproof: input.disproof.trim(),
+    outcome: input.outcome,
+    rulingNote: input.rulingNote ?? beliefs[index].rulingNote,
+    updatedAt: new Date().toISOString(),
+  };
+
+  beliefs[index] = updated;
+  await writeJsonFile(beliefsPath, beliefs);
+  return updated;
+}
+
+export async function deleteBelief(id: string): Promise<boolean> {
+  const beliefs = await getBeliefs();
+  const filtered = beliefs.filter((belief) => belief.id !== id);
+
+  if (filtered.length === beliefs.length) {
+    return false;
+  }
+
+  await writeJsonFile(beliefsPath, filtered);
+
+  const challenges = await readJsonFile<Challenge[]>(challengesPath);
+  const remaining = challenges.filter((challenge) => challenge.beliefId !== id);
+  await writeJsonFile(challengesPath, remaining);
+
+  return true;
 }
 
 export async function getChallenges(beliefId?: string): Promise<Challenge[]> {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BeliefCard } from "@/components/belief-card";
+import { LeadBeliefSpotlight } from "@/components/lead-belief-spotlight";
 import { SectionHeading } from "@/components/section-heading";
 import { foundingRule, platformChannels, processSteps } from "@/lib/site-content";
 import { getBeliefs } from "@/lib/store";
@@ -9,6 +10,9 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const beliefs = await getBeliefs();
+  const leadBelief = beliefs[0];
+  const otherBeliefs = beliefs.slice(1);
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-24 px-6 py-8 sm:px-10 lg:px-12">
       <section className="overflow-hidden rounded-[2rem] border border-sky-400/15 bg-slate-950/65 px-6 py-8 shadow-[0_0_0_1px_rgba(125,211,252,0.06),0_24px_100px_rgba(2,6,23,0.72)] sm:px-10 sm:py-12">
@@ -44,6 +48,8 @@ export default async function Home() {
         </div>
       </section>
 
+      {leadBelief ? <LeadBeliefSpotlight belief={leadBelief} /> : null}
+
       <section id="rule" className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
         <SectionHeading
           eyebrow="Founding Rule"
@@ -59,8 +65,8 @@ export default async function Home() {
       <section id="beliefs" className="space-y-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="Starter Beliefs"
-            title="Your first belief cards become the foundation."
+            eyebrow="More beliefs"
+            title="The rest of the public belief list."
             description="Each card links to a full belief page where challenges are submitted and rulings are recorded."
           />
           <Link
@@ -72,7 +78,7 @@ export default async function Home() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-3">
-          {beliefs.map((belief) => (
+          {otherBeliefs.map((belief) => (
             <BeliefCard key={belief.id} belief={belief} />
           ))}
         </div>

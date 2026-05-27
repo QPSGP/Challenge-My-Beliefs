@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ChallengeForm } from "@/components/challenge-form";
 import { ChallengeList } from "@/components/challenge-list";
+import { FounderEditBanner } from "@/components/founder-edit-banner";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import { getBeliefById, getChallenges } from "@/lib/store";
 
@@ -27,6 +28,8 @@ export default async function BeliefDetailPage({ params }: BeliefDetailPageProps
       <Link href="/beliefs" className="text-sm text-sky-300 hover:text-sky-200">
         ← Back to all beliefs
       </Link>
+
+      <FounderEditBanner beliefId={belief.id} beliefTitle={belief.title} />
 
       <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
