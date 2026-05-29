@@ -3,7 +3,7 @@ import { BeliefCategoryNav } from "@/components/belief-category-nav";
 import { SectionHeading } from "@/components/section-heading";
 import {
   filterBeliefsByCategory,
-  getCategoriesFromBeliefs,
+  getSortedCategories,
   groupBeliefsByCategory,
 } from "@/lib/categories";
 import { foundingRule } from "@/lib/site-content";
@@ -18,7 +18,7 @@ type BeliefsPageProps = {
 export default async function BeliefsPage({ searchParams }: BeliefsPageProps) {
   const { category: activeCategory } = await searchParams;
   const beliefs = await getBeliefs();
-  const categories = getCategoriesFromBeliefs(beliefs);
+  const categories = getSortedCategories(beliefs);
   const filtered = filterBeliefsByCategory(beliefs, activeCategory);
   const groups = groupBeliefsByCategory(filtered);
 

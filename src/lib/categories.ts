@@ -17,6 +17,37 @@ export function normalizeCategory(value: string | undefined): string {
   return trimmed.length > 0 ? trimmed : DEFAULT_CATEGORY;
 }
 
+export function categoryToSlug(category: string): string {
+  return category
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function slugToCategory(slug: string, categories: string[]): string | undefined {
+  return categories.find((category) => categoryToSlug(category) === slug);
+}
+
+export function getSortedCategories(beliefs: Belief[]): string[] {
+  const fromBeliefs = getCategoriesFromBeliefs(beliefs);
+  const ordered: string[] = [];
+
+  for (const preset of SUGGESTED_CATEGORIES) {
+    if (fromBeliefs.includes(preset)) {
+      ordered.push(preset);
+    }
+  }
+
+  for (const category of fromBeliefs) {
+    if (!ordered.includes(category)) {
+      ordered.push(category);
+    }
+  }
+
+  return ordered;
+}
+
 export function getCategoriesFromBeliefs(beliefs: Belief[]): string[] {
   const seen = new Set<string>();
   const categories: string[] = [];
@@ -48,7 +79,7 @@ export function groupBeliefsByCategory(beliefs: Belief[]): BeliefCategoryGroup[]
     groups.set(category, list);
   }
 
-  return getCategoriesFromBeliefs(beliefs).map((category) => ({
+  return getSortedCategories(beliefs).map((category) => ({
     category,
     beliefs: groups.get(category) ?? [],
   }));

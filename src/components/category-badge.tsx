@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { categoryToSlug } from "@/lib/categories";
 type CategoryBadgeProps = {
   category: string;
   linkToFilter?: boolean;
@@ -15,7 +16,7 @@ export function CategoryBadge({ category, linkToFilter = false }: CategoryBadgeP
 
   return (
     <Link
-      href={`/beliefs?category=${encodeURIComponent(category)}`}
+      href={`/categories/${categoryToSlug(category)}`}
       className={`${className} transition hover:border-violet-400/50 hover:bg-violet-400/20`}
     >
       {category}

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { categoryToSlug } from "@/lib/categories";
+
 type BeliefCategoryNavProps = {
   categories: string[];
   activeCategory?: string;
@@ -18,10 +20,13 @@ export function BeliefCategoryNav({ categories, activeCategory }: BeliefCategory
       <Link href="/beliefs" className={linkClass(!activeCategory)}>
         All
       </Link>
+      <Link href="/categories" className={linkClass(false)}>
+        Categories
+      </Link>
       {categories.map((category) => (
         <Link
           key={category}
-          href={`/beliefs?category=${encodeURIComponent(category)}`}
+          href={`/categories/${categoryToSlug(category)}`}
           className={linkClass(activeCategory === category)}
         >
           {category}

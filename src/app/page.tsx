@@ -1,8 +1,10 @@
 import Link from "next/link";
 
+import { CategoryCard } from "@/components/category-card";
 import { BeliefCard } from "@/components/belief-card";
 import { LeadBeliefSpotlight } from "@/components/lead-belief-spotlight";
 import { SectionHeading } from "@/components/section-heading";
+import { groupBeliefsByCategory } from "@/lib/categories";
 import { foundingRule, platformChannels, processSteps } from "@/lib/site-content";
 import { getBeliefs } from "@/lib/store";
 
@@ -11,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const beliefs = await getBeliefs();
   const leadBelief = beliefs[0];
-  const otherBeliefs = beliefs.slice(1);
+  const categoryGroups = groupBeliefsByCategory(beliefs);
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-24 px-6 py-8 sm:px-10 lg:px-12">
@@ -62,12 +64,39 @@ export default async function Home() {
         </div>
       </section>
 
+      <section id="categories" className="space-y-10">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <SectionHeading
+            eyebrow="Categories"
+            title="Browse beliefs by category"
+            description="Beliefs are grouped by the kind of claim they make — rights, reasoning, society, economics, meaning, and evidence."
+          />
+          <Link
+            href="/categories"
+            className="shrink-0 rounded-full border border-sky-400/40 bg-sky-400/15 px-5 py-3 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
+          >
+            All categories
+          </Link>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {categoryGroups.map((group) => (
+            <CategoryCard
+              key={group.category}
+              category={group.category}
+              count={group.beliefs.length}
+              preview={group.beliefs[0]?.statement ?? ""}
+            />
+          ))}
+        </div>
+      </section>
+
       <section id="beliefs" className="space-y-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="More beliefs"
-            title="The rest of the public belief list."
-            description="Each card links to a full belief page where challenges are submitted and rulings are recorded."
+            eyebrow="Core beliefs"
+            title="The full public list starts here."
+            description="Your lead belief is featured above. Open any category or view the complete ordered list."
           />
           <Link
             href="/beliefs"
@@ -78,7 +107,7 @@ export default async function Home() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-3">
-          {otherBeliefs.map((belief) => (
+          {beliefs.slice(0, 6).map((belief) => (
             <BeliefCard key={belief.id} belief={belief} />
           ))}
         </div>
