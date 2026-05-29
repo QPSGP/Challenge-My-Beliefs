@@ -1,35 +1,188 @@
 [
   {
     "id": "individual-life-and-property",
-    "title": "Life and property of the individual",
-    "statement": "I believe that the life and property of the individual.",
+    "title": "Life and property are inviolable",
+    "statement": "I believe that the life and property of the individual are inviolable. A benevolent society cannot be built on harming people or seizing what they have honestly earned without just cause.",
     "category": "Individual Rights",
     "confidence": "High",
-    "evidence": [],
-    "disproof": "",
+    "evidence": [
+      "Without security in person and property, cooperation gives way to fear and predation.",
+      "Every durable social contract assumes that innocent people are not legitimate targets of violence or theft."
+    ],
+    "disproof": "Show that a stable, benevolent society can be sustained while routinely violating innocent life or property.",
     "outcome": "unchanged",
     "rulingNote": "",
-    "updatedAt": "2026-05-27T00:00:00.000Z"
+    "updatedAt": "2026-05-27T22:45:00.000Z"
   },
   {
-    "id": "objective-reality",
-    "title": "Reality is the final test",
-    "statement": "A belief should not change because of pressure, popularity, or emotion alone. It should change when reality shows it is false.",
+    "id": "consent-legitimate-interaction",
+    "title": "Consent is the basis of legitimacy",
+    "statement": "I believe that consent is the moral basis of legitimate interaction. Unity built on force is domination, not cooperation.",
+    "category": "Individual Rights",
+    "confidence": "High",
+    "evidence": [
+      "Voluntary agreements align incentives and reduce resentment.",
+      "Coerced participation corrupts both the coerced and the coercer."
+    ],
+    "disproof": "Show that widespread coercion produces more trust, prosperity, and moral integrity than widespread consent.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "truth-over-comfort",
+    "title": "Truth matters more than comfort",
+    "statement": "I believe that truth matters more than comfort. A benevolent society must prefer painful honesty over soothing falsehood.",
     "category": "Philosophy & Reasoning",
     "confidence": "High",
     "evidence": [
-      "Truth claims need standards outside personal preference.",
-      "Stable reasoning becomes possible when evidence can overrule ego."
+      "Policies built on pleasant lies eventually harm the people they claim to help.",
+      "Trust collapses when leaders and institutions prioritize image over reality."
     ],
-    "disproof": "Show a class of important beliefs where objective evidence and observed outcomes should not carry decisive weight.",
+    "disproof": "Show that societies which suppress uncomfortable truths reliably become more benevolent and unified over time.",
     "outcome": "unchanged",
     "rulingNote": "",
-    "updatedAt": "2026-05-27T00:00:00.000Z"
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "law-applies-equally",
+    "title": "Law applies equally to all",
+    "statement": "I believe that law should apply equally to rulers and ruled. Without equal justice, unity becomes obedience to privilege.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "Selective enforcement breeds cynicism and rebellion.",
+      "Equal treatment under law is the minimum condition for public trust."
+    ],
+    "disproof": "Show that societies with privileged legal classes remain more peaceful and just than those with equal application of law.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "power-limited-accountable",
+    "title": "Power must be limited and accountable",
+    "statement": "I believe that power should be limited, divided, and accountable. Concentrated power attracts corruption; benevolence requires checks.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "History shows unchecked power tends toward abuse, even when begun with good intentions.",
+      "Separation of powers reduces the cost of any single actor's failure or malice."
+    ],
+    "disproof": "Show that highly concentrated, minimally accountable power consistently produces better outcomes for ordinary people than limited power.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "peaceful-resolution",
+    "title": "Peaceful resolution over violence",
+    "statement": "I believe that peaceful resolution should be preferred over violence. Force may sometimes be necessary in defense, but it is never a substitute for reason.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "Violence escalates cycles of retaliation and trauma.",
+      "Durable agreements require parties to remain alive and willing to coexist."
+    ],
+    "disproof": "Show that societies which routinely choose violence over deliberation become more unified and benevolent.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "voluntary-exchange",
+    "title": "Voluntary exchange benefits both",
+    "statement": "I believe that voluntary exchange creates mutual benefit. Trade is cooperation, not exploitation, when both parties consent and information is honest.",
+    "category": "Economics",
+    "confidence": "High",
+    "evidence": [
+      "People trade when they expect to be better off, not worse off.",
+      "Prosperity grows when individuals can specialize and exchange freely."
+    ],
+    "disproof": "Show that banning or heavily restricting voluntary exchange improves welfare more than allowing it under honest rules.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "charity-not-coercion",
+    "title": "Charity is virtuous; coercion is not",
+    "statement": "I believe that charity is virtuous, but coercion in the name of charity is not. Benevolence must be chosen, or it ceases to be moral.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "Moral credit requires a free choice to help.",
+      "Forced 'generosity' often breeds resentment and dependency without dignity."
+    ],
+    "disproof": "Show that coerced redistribution produces stronger character, gratitude, and social trust than voluntary charity.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "free-speech-challenge",
+    "title": "Free speech and honest challenge",
+    "statement": "I believe that the right to speak, question, and dissent is essential to social health. A society that punishes honest challenge cannot stay truthful or unified for long.",
+    "category": "Individual Rights",
+    "confidence": "High",
+    "evidence": [
+      "Error is corrected only when it can be named aloud.",
+      "Suppressed speech does not disappear; it festers and returns as extremism."
+    ],
+    "disproof": "Show that suppressing dissent produces more accurate institutions and stronger long-term unity than protecting it.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "inherent-human-worth",
+    "title": "Inherent human worth",
+    "statement": "I believe that human beings have inherent worth beyond utility. A benevolent society treats people as sacred, not disposable.",
+    "category": "Faith & Meaning",
+    "confidence": "High",
+    "evidence": [
+      "Reducing persons to their economic or political usefulness justifies cruelty.",
+      "Dignity is the foundation of both rights and compassion."
+    ],
+    "disproof": "Show that treating human worth as purely instrumental produces a more benevolent and stable society.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "not-means-to-end",
+    "title": "Persons are not means to ends",
+    "statement": "I believe that no person should be treated as a means to another's end. Benevolence requires seeing each person as an end in themselves.",
+    "category": "Individual Rights",
+    "confidence": "High",
+    "evidence": [
+      "Using people as tools dehumanizes both victim and user.",
+      "Kant's categorical imperative remains a practical guardrail against political cruelty."
+    ],
+    "disproof": "Show that routinely instrumentalizing people for collective goals produces better moral outcomes than respecting individual ends.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "equal-dignity-not-outcomes",
+    "title": "Equal dignity, not equal outcomes",
+    "statement": "I believe that equal dignity does not require equal outcomes. A benevolent society protects equal standing under the rules, not sameness of result.",
+    "category": "Individual Rights",
+    "confidence": "High",
+    "evidence": [
+      "People differ in talent, effort, luck, and choice; equal outcomes require unequal treatment.",
+      "Justice concerns fair process; envy concerns comparison."
+    ],
+    "disproof": "Show that enforced equal outcomes increase freedom, trust, and prosperity more than equal rules applied to all.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
   },
   {
     "id": "contextual-honesty",
     "title": "Context matters as much as facts",
-    "statement": "Raw facts can mislead when stripped from timing, incentives, or surrounding conditions. Honest interpretation requires context.",
+    "statement": "I believe that context matters as much as facts. Raw facts can mislead when stripped from timing, incentives, or surrounding conditions.",
     "category": "Philosophy & Reasoning",
     "confidence": "High",
     "evidence": [
@@ -39,21 +192,261 @@
     "disproof": "Show that context regularly makes reasoning less accurate instead of more accurate in high-stakes decisions.",
     "outcome": "unchanged",
     "rulingNote": "",
-    "updatedAt": "2026-05-27T00:00:00.000Z"
+    "updatedAt": "2026-05-27T22:45:00.000Z"
   },
   {
     "id": "changing-mind",
     "title": "Changing your mind is strength",
-    "statement": "When better evidence appears, revising a belief is a sign of intellectual integrity, not weakness.",
+    "statement": "I believe that when better evidence appears, revising a belief is a sign of intellectual integrity, not weakness.",
     "category": "Philosophy & Reasoning",
-    "confidence": "Medium",
+    "confidence": "High",
     "evidence": [
       "Stubborn consistency often protects identity rather than truth.",
       "Public reasoning improves when updates are rewarded instead of mocked."
     ],
     "disproof": "Show that belief revision predictably harms trust even when the new position is better supported.",
-    "outcome": "refined",
-    "rulingNote": "Refined to emphasize public trust grows when reasoning is visible, not when you never update.",
-    "updatedAt": "2026-05-27T00:00:00.000Z"
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "principles-applied-consistently",
+    "title": "Principles applied consistently",
+    "statement": "I believe that principles should be applied consistently, not selectively. Hypocrisy destroys unity because it signals that power, not morality, sets the rules.",
+    "category": "Philosophy & Reasoning",
+    "confidence": "High",
+    "evidence": [
+      "Selective principle application is recognized as injustice even by children.",
+      "Double standards dissolve the legitimacy of leaders and institutions."
+    ],
+    "disproof": "Show that societies thrive more when elites routinely exempt themselves from the rules they impose on others.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "moral-claims-by-consequences",
+    "title": "Test morals by consequences",
+    "statement": "I believe that moral claims should be tested by their real-world consequences. A belief that sounds noble but reliably produces harm should be revised.",
+    "category": "Philosophy & Reasoning",
+    "confidence": "High",
+    "evidence": [
+      "Good intentions are not sufficient when outcomes repeatedly harm the vulnerable.",
+      "Evidence over time reveals whether a moral rule actually serves human flourishing."
+    ],
+    "disproof": "Show that moral systems which ignore observed outcomes produce more benevolent societies than those that learn from results.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "responsibility-with-rights",
+    "title": "Responsibility alongside rights",
+    "statement": "I believe that communities thrive when people take responsibility, not only demand rights. Rights without responsibility produce resentment and fracture.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "Sustainable freedom requires citizens who restrain themselves and contribute.",
+      "Cultures that emphasize only entitlement tend toward conflict and dependency."
+    ],
+    "disproof": "Show that societies emphasizing rights without personal responsibility become more unified and benevolent.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "families-and-local-community",
+    "title": "Family and community first",
+    "statement": "I believe that families and local communities are the first layer of social care. Strong small bonds make large-scale unity possible without tyranny.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "Most care is delivered locally, not by distant bureaucracies.",
+      "Healthy families and neighborhoods reduce demand for coercive state intervention."
+    ],
+    "disproof": "Show that weakening family and local community produces stronger benevolence and social trust than strengthening them.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "institutions-earn-trust",
+    "title": "Institutions earn trust",
+    "statement": "I believe that institutions should earn trust through transparency, not demand it through authority. Unity cannot be commanded; it must be justified.",
+    "category": "Politics & Society",
+    "confidence": "High",
+    "evidence": [
+      "Opaque institutions breed conspiracy and cynicism.",
+      "Transparency allows errors to be corrected before they become catastrophes."
+    ],
+    "disproof": "Show that secretive, unaccountable institutions maintain higher public trust than transparent ones.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "property-enables-planning",
+    "title": "Property enables planning",
+    "statement": "I believe that property rights enable long-term planning and investment. People care for what they own and build; societies that undermine ownership undermine prosperity.",
+    "category": "Economics",
+    "confidence": "High",
+    "evidence": [
+      "Uncertain property rights discourage saving, building, and maintenance.",
+      "Economic development correlates strongly with secure ownership."
+    ],
+    "disproof": "Show that weakening property rights increases investment, care for resources, and long-term prosperity.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "opportunity-reduces-poverty",
+    "title": "Opportunity reduces poverty",
+    "statement": "I believe that poverty is reduced more reliably by opportunity than by resentment. Benevolence should aim at lifting people up, not only redistributing down.",
+    "category": "Economics",
+    "confidence": "Medium",
+    "evidence": [
+      "Markets and mobility have lifted billions out of extreme poverty in recent decades.",
+      "Resentment politics often distracts from reforms that expand earning and learning."
+    ],
+    "disproof": "Show that societies focused primarily on resentment and restriction outperform those focused on opportunity and exchange for reducing poverty.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "incentives-shape-behavior",
+    "title": "Incentives shape behavior",
+    "statement": "I believe that incentives shape behavior, and good systems align incentives with virtue. A society that rewards cheating will not remain benevolent.",
+    "category": "Economics",
+    "confidence": "High",
+    "evidence": [
+      "People respond to what is rewarded and punished, not only to speeches.",
+      "Perverse incentives corrupt medicine, education, politics, and business alike."
+    ],
+    "disproof": "Show that incentive structures consistently matter less than rhetoric in determining social outcomes.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "honest-money-contracts",
+    "title": "Honest money and contracts",
+    "statement": "I believe that honest money and honest contracts are social glue. Deception in economic life destroys trust across the whole society.",
+    "category": "Economics",
+    "confidence": "High",
+    "evidence": [
+      "Counterfeiting, fraud, and broken contracts erode cooperation.",
+      "Stable exchange requires predictable rules and truthful dealing."
+    ],
+    "disproof": "Show that widespread economic deception strengthens social trust and benevolence.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "forgiveness-and-restoration",
+    "title": "Forgiveness and restoration",
+    "statement": "I believe that forgiveness and restoration should be possible where truth and repentance exist. Unity requires a path back from failure, not permanent exile for every mistake.",
+    "category": "Faith & Meaning",
+    "confidence": "High",
+    "evidence": [
+      "Societies without mercy become brittle and vengeful.",
+      "Restoration preserves families, workplaces, and communities when harm has been acknowledged."
+    ],
+    "disproof": "Show that permanent punishment without restoration produces more benevolent communities than truth-based forgiveness.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "gratitude-and-humility",
+    "title": "Gratitude and humility",
+    "statement": "I believe that gratitude and humility restrain arrogance. Societies that forget gratitude become cruel, even when they call themselves moral.",
+    "category": "Faith & Meaning",
+    "confidence": "High",
+    "evidence": [
+      "Gratitude counters entitlement and tribal hatred.",
+      "Humble leaders and citizens are less likely to dehumanize opponents."
+    ],
+    "disproof": "Show that cultures of ingratitude and pride produce more benevolent treatment of the weak than cultures of gratitude and humility.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "purpose-beyond-self-interest",
+    "title": "Purpose beyond self-interest",
+    "statement": "I believe that purpose beyond self-interest gives unity a reason to endure. Shared meaning helps people sacrifice short-term gain for long-term good.",
+    "category": "Faith & Meaning",
+    "confidence": "Medium",
+    "evidence": [
+      "Pure self-interest alone struggles to sustain sacrifice for strangers or future generations.",
+      "Communities with shared purpose weather crises better than those without."
+    ],
+    "disproof": "Show that societies with no transcendent purpose outperform purposeful societies in cooperation and benevolence.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "observable-evidence",
+    "title": "Test claims against evidence",
+    "statement": "I believe that claims about reality should be tested against observable evidence. Benevolence without truth becomes well-intentioned harm.",
+    "category": "Science & Evidence",
+    "confidence": "High",
+    "evidence": [
+      "Reality does not bend to wishful thinking; policies must answer to results.",
+      "Observable outcomes are the final court for factual claims."
+    ],
+    "disproof": "Show a class of important beliefs where objective evidence and observed outcomes should not carry decisive weight.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "expertise-not-infallible",
+    "title": "Expertise is not infallible",
+    "statement": "I believe that expertise is valuable, but expertise is not infallible authority. Science serves society best when it can be questioned openly.",
+    "category": "Science & Evidence",
+    "confidence": "High",
+    "evidence": [
+      "Expert consensus has been wrong before and will be again.",
+      "Progress requires challenge, replication, and revision."
+    ],
+    "disproof": "Show that treating expert authority as beyond question produces better long-term outcomes than open scrutiny.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "education-teaches-thinking",
+    "title": "Education teaches how to think",
+    "statement": "I believe that education should teach people how to think, not only what to think. A unified benevolent society needs citizens who can reason, not just obey narratives.",
+    "category": "Science & Evidence",
+    "confidence": "High",
+    "evidence": [
+      "Indoctrination produces conformity, not wisdom.",
+      "Critical thinking is essential for evaluating leaders, media, and policy."
+    ],
+    "disproof": "Show that education focused on rote acceptance of approved views produces more benevolent citizens than education focused on reasoning.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "history-studied-honestly",
+    "title": "History studied honestly",
+    "statement": "I believe that history should be studied honestly, including our own failures. Societies that mythologize themselves repeat their worst mistakes.",
+    "category": "Science & Evidence",
+    "confidence": "High",
+    "evidence": [
+      "Sanitized history prevents learning from past atrocities and errors.",
+      "Honest memory is a safeguard against repeating cruelty in new forms."
+    ],
+    "disproof": "Show that nations which suppress uncomfortable history become more just and unified than those that confront it.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-05-27T22:45:00.000Z"
   }
 ]
