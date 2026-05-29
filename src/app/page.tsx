@@ -4,6 +4,7 @@ import { CategoryCard } from "@/components/category-card";
 import { BeliefCard } from "@/components/belief-card";
 import { LeadBeliefSpotlight } from "@/components/lead-belief-spotlight";
 import { SectionHeading } from "@/components/section-heading";
+import { getCoreTenBeliefs } from "@/lib/belief-collections";
 import { groupBeliefsByCategory } from "@/lib/categories";
 import { foundingRule, platformChannels, processSteps } from "@/lib/site-content";
 import { getBeliefs } from "@/lib/store";
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const beliefs = await getBeliefs();
   const leadBelief = beliefs[0];
+  const coreTen = getCoreTenBeliefs(beliefs);
   const categoryGroups = groupBeliefsByCategory(beliefs);
 
   return (
@@ -27,8 +29,8 @@ export default async function Home() {
               A public process for testing beliefs against reality.
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-slate-300">
-              This project starts with your list of beliefs, invites structured challenges,
-              and records whether each belief remains unchanged, becomes refined, or must
+              This project publishes beliefs for a unified, benevolent society — invites structured
+              challenges, and records whether each belief remains unchanged, becomes refined, or must
               change under the weight of stronger evidence.
             </p>
           </div>
@@ -52,6 +54,33 @@ export default async function Home() {
 
       {leadBelief ? <LeadBeliefSpotlight belief={leadBelief} /> : null}
 
+      <section id="core-ten" className="space-y-10">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <SectionHeading
+            eyebrow="Core ten"
+            title="Beliefs for a unified benevolent society"
+            description="These ten beliefs form the foundation. They are ordered by public rank — #1 is the lead belief featured above."
+          />
+          <Link
+            href="/beliefs"
+            className="shrink-0 rounded-full border border-sky-400/40 bg-sky-400/15 px-5 py-3 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
+          >
+            View all {beliefs.length} beliefs
+          </Link>
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-2">
+          {coreTen.map((belief, index) => (
+            <div key={belief.id} className="relative">
+              <span className="absolute -top-3 left-4 z-10 rounded-full border border-violet-400/30 bg-slate-950 px-3 py-1 text-xs font-semibold text-violet-200">
+                Core #{index + 1}
+              </span>
+              <BeliefCard belief={belief} />
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="rule" className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
         <SectionHeading
           eyebrow="Founding Rule"
@@ -67,9 +96,9 @@ export default async function Home() {
       <section id="categories" className="space-y-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="Categories"
-            title="Browse beliefs by category"
-            description="Beliefs are grouped by the kind of claim they make — rights, reasoning, society, economics, meaning, and evidence."
+            eyebrow="More beliefs"
+            title="Extended list by category"
+            description="Beyond the core ten, additional beliefs support the same framework — grouped by rights, reasoning, society, economics, meaning, and evidence."
           />
           <Link
             href="/categories"
@@ -94,9 +123,9 @@ export default async function Home() {
       <section id="beliefs" className="space-y-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="Core beliefs"
-            title="The full public list starts here."
-            description="Your lead belief is featured above. Open any category or view the complete ordered list."
+            eyebrow="Full list"
+            title="Every public belief in order"
+            description="Your lead belief and core ten appear first. Open any card to read the full statement, evidence, and challenge it."
           />
           <Link
             href="/beliefs"

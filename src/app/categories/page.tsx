@@ -16,7 +16,7 @@ export default async function CategoriesPage() {
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-10 px-6 py-10 sm:px-10 lg:px-12">
       <SectionHeading
         eyebrow="Categories"
-        title="Browse beliefs by category"
+        title="Categories for a unified benevolent society"
         description="Each category groups related beliefs that support a unified, benevolent society. Open a category to read and challenge every belief in that group."
       />
 

@@ -14,20 +14,17 @@ import type { Belief, Challenge } from "@/lib/types";
 type AdminDashboardProps = {
   initialBeliefs: Belief[];
   initialChallenges: Challenge[];
+  bundledBeliefCount: number;
 };
 
 export function AdminDashboard({
   initialBeliefs,
   initialChallenges,
+  bundledBeliefCount,
 }: AdminDashboardProps) {
   const router = useRouter();
   const [founderKey, setFounderKeyState] = useState("");
   const [message, setMessage] = useState("");
-
-  const beliefOrderKey = initialBeliefs.map((belief) => belief.id).join("|");
-  const pendingChallenges = initialChallenges.filter(
-    (challenge) => challenge.status === "pending",
-  );
 
   async function markReviewed(challengeId: string) {
     setMessage("");
@@ -46,6 +43,32 @@ export function AdminDashboard({
     }
 
     setMessage("Challenge marked reviewed.");
+    router.refresh();
+  }
+
+  const beliefOrderKey = initialBeliefs.map((belief) => belief.id).join("|");
+  const pendingChallenges = initialChallenges.filter(
+    (challenge) => challenge.status === "pending",
+  );
+  const needsSeed =
+    bundledBeliefCount > initialBeliefs.length && bundledBeliefCount >= 20;
+
+  async function loadSeedBeliefs() {
+    setMessage("");
+
+    const response = await fetch("/api/beliefs/seed", {
+      method: "POST",
+      headers: founderHeaders(founderKey),
+    });
+
+    const data = (await response.json()) as { error?: string; count?: number };
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Could not load the benevolent society beliefs.");
+      return;
+    }
+
+    setMessage(`Loaded ${data.count ?? bundledBeliefCount} beliefs from the site seed file.`);
     router.refresh();
   }
 
@@ -82,6 +105,27 @@ export function AdminDashboard({
           </button>
         </div>
       </section>
+
+      {needsSeed ? (
+        <section className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
+          <h2 className="text-xl font-semibold text-amber-100">
+            Benevolent society beliefs not fully loaded
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-amber-50/80">
+            The live site is showing {initialBeliefs.length} belief
+            {initialBeliefs.length === 1 ? "" : "s"}, but the seed file has {bundledBeliefCount}{" "}
+            beliefs for a unified benevolent society (core ten plus extended list). Load them now to
+            replace the current live list.
+          </p>
+          <button
+            type="button"
+            onClick={() => void loadSeedBeliefs()}
+            className="mt-4 rounded-full border border-amber-300/40 bg-amber-300/15 px-5 py-3 text-sm font-semibold text-amber-50 hover:bg-amber-300/25"
+          >
+            Load {bundledBeliefCount} benevolent society beliefs
+          </button>
+        </section>
+      ) : null}
 
       {message ? <p className="text-sm text-sky-300">{message}</p> : null}
 

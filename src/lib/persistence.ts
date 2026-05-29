@@ -9,6 +9,10 @@ const BLOB_BELIEFS = "cmb/beliefs.json";
 const BLOB_CHALLENGES = "cmb/challenges.json";
 const BLOB_ACCESS = "private" as const;
 
+/** IDs from the bundled benevolent-society seed; missing from live blob => stale data. */
+const BUNDLE_MARKER_IDS = ["not-means-to-end", "equal-dignity-not-outcomes"] as const;
+const MIN_BUNDLE_BELIEFS = 20;
+
 export class PersistenceNotConfiguredError extends Error {
   constructor() {
     super(
@@ -29,6 +33,49 @@ function isVercelRuntime(): boolean {
 async function readLocalJson<T>(filePath: string): Promise<T> {
   const raw = await fs.readFile(filePath, "utf8");
   return JSON.parse(raw) as T;
+}
+
+function getBeliefIds(data: unknown): Set<string> {
+  if (!Array.isArray(data)) {
+    return new Set();
+  }
+
+  const ids = new Set<string>();
+
+  for (const item of data) {
+    if (
+      typeof item === "object" &&
+      item !== null &&
+      "id" in item &&
+      typeof (item as { id: unknown }).id === "string"
+    ) {
+      ids.add((item as { id: string }).id);
+    }
+  }
+
+  return ids;
+}
+
+function isStaleLiveBeliefs(live: unknown, bundled: unknown): boolean {
+  if (!Array.isArray(live) || !Array.isArray(bundled)) {
+    return false;
+  }
+
+  if (bundled.length < MIN_BUNDLE_BELIEFS || live.length >= bundled.length) {
+    return false;
+  }
+
+  const liveIds = getBeliefIds(live);
+  return BUNDLE_MARKER_IDS.some((id) => !liveIds.has(id));
+}
+
+export async function readBundledBeliefsJson<T>(): Promise<T> {
+  return readLocalJson<T>(beliefsPath);
+}
+
+export async function getBundledBeliefCount(): Promise<number> {
+  const bundled = await readBundledBeliefsJson<unknown[]>();
+  return Array.isArray(bundled) ? bundled.length : 0;
 }
 
 async function writeLocalJson<T>(filePath: string, data: T): Promise<void> {
@@ -65,11 +112,29 @@ async function writeBlobJson<T>(pathname: string, data: T): Promise<void> {
 }
 
 export async function readBeliefsJson<T>(): Promise<T> {
+  const bundled = await readBundledBeliefsJson<T>();
+
   if (hasBlobStorage()) {
-    return readBlobJson<T>(BLOB_BELIEFS, beliefsPath);
+    try {
+      const result = await get(BLOB_BELIEFS, { access: BLOB_ACCESS });
+
+      if (result?.stream) {
+        const text = await new Response(result.stream).text();
+        const live = JSON.parse(text) as T;
+
+        if (isStaleLiveBeliefs(live, bundled)) {
+          await writeBlobJson(BLOB_BELIEFS, bundled);
+          return bundled;
+        }
+
+        return live;
+      }
+    } catch {
+      // Fall through to bundled repo file.
+    }
   }
 
-  return readLocalJson<T>(beliefsPath);
+  return bundled;
 }
 
 export async function writeBeliefsJson<T>(data: T): Promise<void> {
