@@ -29,6 +29,8 @@ export default async function AdminPage() {
         initialBeliefs={beliefs}
         initialChallenges={challenges}
         bundledBeliefCount={bundledBeliefCount}
+        supabaseConfigured={status.supabaseConfigured}
+        usingSupabase={status.persistence === "supabase"}
       />
     </main>
   );

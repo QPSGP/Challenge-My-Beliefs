@@ -15,12 +15,16 @@ type AdminDashboardProps = {
   initialBeliefs: Belief[];
   initialChallenges: Challenge[];
   bundledBeliefCount: number;
+  supabaseConfigured: boolean;
+  usingSupabase: boolean;
 };
 
 export function AdminDashboard({
   initialBeliefs,
   initialChallenges,
   bundledBeliefCount,
+  supabaseConfigured,
+  usingSupabase,
 }: AdminDashboardProps) {
   const router = useRouter();
   const [founderKey, setFounderKeyState] = useState("");
@@ -69,6 +73,34 @@ export function AdminDashboard({
     }
 
     setMessage(`Loaded ${data.count ?? bundledBeliefCount} beliefs from the site seed file.`);
+    router.refresh();
+  }
+
+  async function migrateToSupabase() {
+    setMessage("");
+
+    const response = await fetch("/api/admin/migrate-supabase", {
+      method: "POST",
+      headers: founderHeaders(founderKey),
+    });
+
+    const data = (await response.json()) as {
+      error?: string;
+      message?: string;
+      counts?: { beliefs: number; challenges: number; revisions: number; waitlist: number };
+    };
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Could not migrate to Supabase.");
+      return;
+    }
+
+    const counts = data.counts;
+    setMessage(
+      counts
+        ? `${data.message ?? "Migration complete."} Beliefs: ${counts.beliefs}, challenges: ${counts.challenges}, revisions: ${counts.revisions}, waitlist: ${counts.waitlist}.`
+        : (data.message ?? "Migration complete."),
+    );
     router.refresh();
   }
 
@@ -123,6 +155,23 @@ export function AdminDashboard({
             className="mt-4 rounded-full border border-amber-300/40 bg-amber-300/15 px-5 py-3 text-sm font-semibold text-amber-50 hover:bg-amber-300/25"
           >
             Load {bundledBeliefCount} benevolent society beliefs
+          </button>
+        </section>
+      ) : null}
+
+      {supabaseConfigured ? (
+        <section className="rounded-3xl border border-sky-400/30 bg-sky-400/10 p-6">
+          <h2 className="text-xl font-semibold text-sky-100">Import into Supabase</h2>
+          <p className="mt-2 text-sm leading-6 text-sky-50/80">
+            Copy beliefs, challenges, revisions, and waitlist from JSON/Blob into Postgres. Run the
+            SQL schema in Supabase first (see SUPABASE.md). Safe to run once after setup.
+          </p>
+          <button
+            type="button"
+            onClick={() => void migrateToSupabase()}
+            className="mt-4 rounded-full border border-sky-300/40 bg-sky-300/15 px-5 py-3 text-sm font-semibold text-sky-50 hover:bg-sky-300/25"
+          >
+            {usingSupabase ? "Re-import from JSON/Blob" : "Migrate to Supabase"}
           </button>
         </section>
       ) : null}

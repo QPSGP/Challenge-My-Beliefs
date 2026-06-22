@@ -82,17 +82,25 @@ git push origin main
 
 In Vercel → **Settings** → **Environment Variables**:
 
-| Name | Environments |
-|------|----------------|
-| `FOUNDER_KEY` | Production (and Preview if you want) |
+| Name | Environments | Notes |
+|------|----------------|-------|
+| `SUPABASE_URL` | Production, Preview | From Supabase → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Production, Preview | **service_role** key only (server-side) |
+| `FOUNDER_KEY` | Production (and Preview if you want) | Optional founder lock |
 
 Redeploy after adding or changing variables.
 
-## 5. Enable saves on Vercel (required for founder edits)
+**Recommended:** Supabase for production ([SUPABASE.md](./SUPABASE.md)). Blob still works as fallback if Supabase is not set.
 
-Vercel cannot write to `data/*.json` on disk. The app uses **Vercel Blob** for live saves.
+## 5. Enable saves on Vercel
 
-### One-time setup
+Vercel cannot write to `data/*.json` on disk. Use **Supabase** (recommended) or **Vercel Blob**.
+
+### Option A — Supabase (recommended)
+
+Follow [SUPABASE.md](./SUPABASE.md): create project → run `supabase/schema.sql` → add env vars → redeploy → `/admin` → import or seed beliefs.
+
+### Option B — Vercel Blob
 
 1. Vercel dashboard → your project **challenge-my-beliefs**
 2. **Storage** tab → **Create Database** → choose **Blob**
@@ -130,7 +138,7 @@ If unset, founder actions work without a key (fine for early testing; set before
 |------|--------|-------|
 | Belief version history | Shipped | Visible on each belief page |
 | Social / podcast / community | Planned | `/channels` + waitlist |
-| Postgres / Supabase | Next | [DATABASE.md](./DATABASE.md) |
+| Postgres / Supabase | Shipped | [SUPABASE.md](./SUPABASE.md) |
 | Full founder auth | Planned | Replace shared key with sessions |
 | Web3 timestamps | Future | No token in MVP |
 

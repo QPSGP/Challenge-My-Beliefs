@@ -4,6 +4,41 @@ type SystemStatusPanelProps = {
   status: SystemStatus;
 };
 
+function persistenceLabel(status: SystemStatus): string {
+  switch (status.persistence) {
+    case "supabase":
+      return "Supabase (Postgres)";
+    case "vercel-blob":
+      return "Vercel Blob";
+    default:
+      return "Local JSON files";
+  }
+}
+
+function persistenceOk(status: SystemStatus): boolean {
+  if (status.runtime === "local") {
+    return true;
+  }
+
+  return status.persistence === "supabase" || status.blobConfigured;
+}
+
+function persistenceHint(status: SystemStatus): string | undefined {
+  if (status.runtime !== "vercel" || persistenceOk(status)) {
+    if (status.supabaseConfigured && status.persistence !== "supabase") {
+      return "Supabase env vars are set but not active. Redeploy after adding them.";
+    }
+
+    return undefined;
+  }
+
+  if (status.supabaseConfigured) {
+    return "Run the SQL schema in Supabase, redeploy, then use Migrate to Supabase in this dashboard.";
+  }
+
+  return "Connect Supabase (recommended) or Vercel Blob. See SUPABASE.md or DEPLOY.md.";
+}
+
 function StatusRow({
   label,
   value,
@@ -43,12 +78,18 @@ export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
         />
         <StatusRow
           label="Persistence"
-          value={status.persistence === "vercel-blob" ? "Vercel Blob" : "Local JSON files"}
-          ok={status.runtime === "local" || status.blobConfigured}
+          value={persistenceLabel(status)}
+          ok={persistenceOk(status)}
+          hint={persistenceHint(status)}
+        />
+        <StatusRow
+          label="Supabase"
+          value={status.supabaseConfigured ? "Configured" : "Not configured"}
+          ok={status.supabaseConfigured}
           hint={
-            status.runtime === "vercel" && !status.blobConfigured
-              ? "Connect Blob in Vercel → Storage → Create Blob → connect project → redeploy."
-              : undefined
+            status.supabaseConfigured
+              ? "Using Postgres when env vars are active on this deployment."
+              : "Optional but recommended. See SUPABASE.md."
           }
         />
         <StatusRow

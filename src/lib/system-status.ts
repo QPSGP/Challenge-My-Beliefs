@@ -1,5 +1,7 @@
 import {
   getBundledBeliefCount,
+  getPersistenceMode,
+  isSupabaseConfigured,
   readBeliefsJson,
   readChallengesJson,
   readRevisionsJson,
@@ -8,7 +10,8 @@ import {
 
 export type SystemStatus = {
   runtime: "local" | "vercel";
-  persistence: "local-files" | "vercel-blob";
+  persistence: "local-files" | "vercel-blob" | "supabase";
+  supabaseConfigured: boolean;
   blobConfigured: boolean;
   founderKeyRequired: boolean;
   beliefCount: number;
@@ -29,12 +32,13 @@ export async function getSystemStatus(): Promise<SystemStatus> {
   ]);
 
   const beliefCount = Array.isArray(beliefs) ? beliefs.length : 0;
-  const blobConfigured = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  const persistence = getPersistenceMode();
 
   return {
     runtime: process.env.VERCEL ? "vercel" : "local",
-    persistence: blobConfigured ? "vercel-blob" : "local-files",
-    blobConfigured,
+    persistence,
+    supabaseConfigured: isSupabaseConfigured(),
+    blobConfigured: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
     founderKeyRequired: Boolean(process.env.FOUNDER_KEY),
     beliefCount,
     bundledBeliefCount,

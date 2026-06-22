@@ -18,14 +18,14 @@ A belief changes only when stronger evidence, grounded in objective reality and 
 - Founder admin: add, edit, reorder, delete beliefs; record rulings; review challenges
 - Planned channels: social, podcast, community (waitlist + roadmap)
 - **Local dev:** JSON under `data/`
-- **Production:** Vercel Blob when `BLOB_READ_WRITE_TOKEN` is set
+- **Production:** Supabase Postgres (recommended) or Vercel Blob
 
 ## Production checklist
 
-1. **Vercel Blob** — Storage → Create Blob → connect to project → redeploy ([DEPLOY.md](./DEPLOY.md))
-2. **FOUNDER_KEY** (optional) — Vercel env var; enter same key in `/admin`
-3. **Beliefs loaded** — `/admin` system status should show 30/30; use seed button if not
-4. **Database** — see [DATABASE.md](./DATABASE.md) when ready to scale beyond JSON/Blob
+1. **Supabase (recommended)** — Create project, run `supabase/schema.sql`, add env vars → [SUPABASE.md](./SUPABASE.md)
+2. **Or Vercel Blob** — Storage → Create Blob → connect → redeploy ([DEPLOY.md](./DEPLOY.md))
+3. **FOUNDER_KEY** (optional) — Vercel env var; enter same key in `/admin`
+4. **Beliefs loaded** — `/admin` system status should show 30/30
 
 ## Auto deploy (Cursor → GitHub → Vercel)
 
@@ -78,4 +78,5 @@ npm run sync   # commit + push to GitHub
 - React 19
 - TypeScript
 - Tailwind CSS 4
-- Vercel Blob (production persistence)
+- Vercel Blob (production persistence fallback)
+- Supabase Postgres (recommended production persistence)

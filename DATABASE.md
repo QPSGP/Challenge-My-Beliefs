@@ -1,85 +1,45 @@
-# Database migration path
+# Database
 
-The MVP stores data as JSON:
+## Current storage (automatic)
 
-| Data | Local file | Vercel Blob path |
-|------|------------|------------------|
-| Beliefs | `data/beliefs.json` | `cmb/beliefs.json` |
-| Challenges | `data/challenges.json` | `cmb/challenges.json` |
-| Belief revisions | `data/belief-revisions.json` | `cmb/belief-revisions.json` |
-| Channel waitlist | `data/waitlist.json` | `cmb/waitlist.json` |
+The app picks a backend in this order:
 
-This works for launch. Before heavy traffic or complex queries, move to **Postgres** (Supabase or Vercel Postgres).
+1. **Supabase** — if `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` are set → [SUPABASE.md](./SUPABASE.md)
+2. **Vercel Blob** — if `BLOB_READ_WRITE_TOKEN` is set → [DEPLOY.md](./DEPLOY.md)
+3. **Local JSON** — `data/*.json` for development
 
-## Recommended next step: Supabase
+No code changes needed when switching — only environment variables.
 
-1. Create a free project at [supabase.com](https://supabase.com)
-2. Add tables:
+## Schema
 
-```sql
-create table beliefs (
-  id text primary key,
-  title text not null,
-  statement text not null,
-  category text not null,
-  confidence text not null,
-  evidence jsonb not null default '[]',
-  disproof text not null default '',
-  outcome text not null default 'unchanged',
-  ruling_note text not null default '',
-  sort_order int not null,
-  updated_at timestamptz not null default now()
-);
+SQL lives in [`supabase/schema.sql`](./supabase/schema.sql):
 
-create table challenges (
-  id text primary key,
-  belief_id text not null references beliefs(id) on delete cascade,
-  challenger_name text not null,
-  argument text not null,
-  evidence text not null,
-  context text not null,
-  sources text not null default '',
-  status text not null default 'pending',
-  created_at timestamptz not null default now()
-);
+| Table | Purpose |
+|-------|---------|
+| `beliefs` | Public belief list (`sort_order` = display rank) |
+| `challenges` | Submitted challenges |
+| `belief_revisions` | Version history snapshots |
+| `channel_waitlist` | Social / podcast / community signups |
 
-create table belief_revisions (
-  id text primary key,
-  belief_id text not null references beliefs(id) on delete cascade,
-  kind text not null,
-  snapshot jsonb not null,
-  created_at timestamptz not null default now()
-);
+## Migration from JSON/Blob
 
-create table channel_waitlist (
-  id text primary key,
-  channel text not null,
-  email text not null,
-  created_at timestamptz not null default now(),
-  unique (channel, email)
-);
-```
+1. Complete [SUPABASE.md](./SUPABASE.md) steps 1–4
+2. Redeploy Vercel
+3. `/admin` → **Migrate to Supabase**
 
-3. Set env vars in Vercel:
+Or founder **Load benevolent society beliefs** to seed only beliefs.
 
-| Name | Purpose |
-|------|---------|
-| `DATABASE_URL` | Postgres connection string |
-| `SUPABASE_URL` | Optional, if using Supabase client |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-side writes only |
+## Code layout
 
-4. Replace `src/lib/persistence.ts` reads/writes with a `src/lib/db/` layer while keeping the same `store.ts` API.
+| Path | Role |
+|------|------|
+| `src/lib/persistence.ts` | Routes reads/writes to Supabase, Blob, or files |
+| `src/lib/supabase/client.ts` | Server Supabase client (service role) |
+| `src/lib/supabase/storage.ts` | Postgres CRUD |
+| `src/lib/store.ts` | App logic (unchanged API) |
 
-## Migration script (manual)
+## Future
 
-1. Export current live data from `/api/beliefs` and founder dashboard
-2. Insert rows into Postgres in belief order (`sort_order`)
-3. Point production env at the database
-4. Keep Blob as backup until verified
-
-## What stays out of MVP
-
-- **Web3 / on-chain timestamps** — optional integrity layer later; no token
-- **Full user accounts** — founder key today; proper auth when community launches
-
-See also: [DEPLOY.md](./DEPLOY.md) for Blob setup and [README.md](./README.md) for routes.
+- Public read policies in Supabase (optional direct client reads)
+- Founder auth via Supabase Auth instead of shared key
+- Web3 timestamps remain optional; no token in MVP

@@ -110,8 +110,8 @@ export const channelPages: Record<
 export const roadmapItems = [
   {
     title: "Database (Postgres / Supabase)",
-    detail: "Move beliefs, challenges, revisions, and waitlist off JSON/Blob for querying and scale.",
-    status: "next" as const,
+    detail: "Beliefs, challenges, revisions, and waitlist in Postgres when env vars are set.",
+    status: "done" as const,
   },
   {
     title: "Belief version history",
