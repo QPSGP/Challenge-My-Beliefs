@@ -67,3 +67,27 @@ export type CreateBeliefInput = {
 export type ReorderBeliefsInput = {
   ids: string[];
 };
+
+export type BeliefRevisionKind = "created" | "content" | "ruling";
+
+export type BeliefRevision = {
+  id: string;
+  beliefId: string;
+  kind: BeliefRevisionKind;
+  snapshot: Belief;
+  createdAt: string;
+};
+
+export type ChannelSlug = "social" | "podcast" | "community";
+
+export type ChannelInterest = {
+  id: string;
+  channel: ChannelSlug;
+  email: string;
+  createdAt: string;
+};
+
+export type CreateChannelInterestInput = {
+  channel: ChannelSlug;
+  email: string;
+};

@@ -1,0 +1,46 @@
+import {
+  getBundledBeliefCount,
+  readBeliefsJson,
+  readChallengesJson,
+  readRevisionsJson,
+  readWaitlistJson,
+} from "@/lib/persistence";
+
+export type SystemStatus = {
+  runtime: "local" | "vercel";
+  persistence: "local-files" | "vercel-blob";
+  blobConfigured: boolean;
+  founderKeyRequired: boolean;
+  beliefCount: number;
+  bundledBeliefCount: number;
+  beliefsSynced: boolean;
+  challengeCount: number;
+  revisionCount: number;
+  waitlistCount: number;
+};
+
+export async function getSystemStatus(): Promise<SystemStatus> {
+  const [beliefs, challenges, revisions, waitlist, bundledBeliefCount] = await Promise.all([
+    readBeliefsJson<unknown[]>(),
+    readChallengesJson<unknown[]>(),
+    readRevisionsJson<unknown[]>(),
+    readWaitlistJson<unknown[]>(),
+    getBundledBeliefCount(),
+  ]);
+
+  const beliefCount = Array.isArray(beliefs) ? beliefs.length : 0;
+  const blobConfigured = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+
+  return {
+    runtime: process.env.VERCEL ? "vercel" : "local",
+    persistence: blobConfigured ? "vercel-blob" : "local-files",
+    blobConfigured,
+    founderKeyRequired: Boolean(process.env.FOUNDER_KEY),
+    beliefCount,
+    bundledBeliefCount,
+    beliefsSynced: beliefCount >= bundledBeliefCount,
+    challengeCount: Array.isArray(challenges) ? challenges.length : 0,
+    revisionCount: Array.isArray(revisions) ? revisions.length : 0,
+    waitlistCount: Array.isArray(waitlist) ? waitlist.length : 0,
+  };
+}

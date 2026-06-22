@@ -103,6 +103,37 @@ Vercel cannot write to `data/*.json` on disk. The app uses **Vercel Blob** for l
 
 After redeploy, founder **Save belief** works on the live site.
 
+### Verify in the app
+
+Open **Founder** → `/admin`. The **System status** panel shows:
+
+- Blob connected (green on Vercel)
+- Beliefs loaded (30/30 for the full benevolent society list)
+- Founder key status
+- Challenge, revision, and waitlist counts
+
+If beliefs show fewer than 30, click **Load benevolent society beliefs** on the same page.
+
+## 6. Optional: set FOUNDER_KEY
+
+When set, all founder API routes require the `x-founder-key` header to match.
+
+1. Vercel → **Settings** → **Environment Variables** → add `FOUNDER_KEY`
+2. Redeploy
+3. Open `/admin`, enter the same key, click **Save key**
+
+If unset, founder actions work without a key (fine for early testing; set before going public).
+
+## 7. What's next (not in MVP)
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Belief version history | Shipped | Visible on each belief page |
+| Social / podcast / community | Planned | `/channels` + waitlist |
+| Postgres / Supabase | Next | [DATABASE.md](./DATABASE.md) |
+| Full founder auth | Planned | Replace shared key with sessions |
+| Web3 timestamps | Future | No token in MVP |
+
 ### Local development
 
 No Blob needed. Saves go to `data/beliefs.json` and `data/challenges.json` as before.

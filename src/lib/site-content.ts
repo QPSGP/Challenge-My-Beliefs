@@ -1,3 +1,5 @@
+import type { ChannelSlug } from "@/lib/types";
+
 export type { Belief, BeliefOutcome } from "@/lib/types";
 
 export const foundingRule =
@@ -46,5 +48,89 @@ export const platformChannels = [
     name: "Community",
     detail:
       "Members help gather evidence, question assumptions, and build reputation through constructive challenges.",
+  },
+] as const;
+
+export const channelPages: Record<
+  ChannelSlug,
+  {
+    slug: ChannelSlug;
+    name: string;
+    headline: string;
+    description: string;
+    detail: string;
+    status: "planned";
+    features: string[];
+  }
+> = {
+  social: {
+    slug: "social",
+    name: "Social",
+    headline: "Short-form discovery",
+    description:
+      "Clips, quotes, and debate highlights that drive people back to the full belief record on the site.",
+    detail: platformChannels[1].detail,
+    status: "planned",
+    features: [
+      "Shareable belief cards and ruling updates",
+      "Highlight the strongest public challenges",
+      "Link every post back to evidence on the website",
+    ],
+  },
+  podcast: {
+    slug: "podcast",
+    name: "Podcast",
+    headline: "Long-form pressure testing",
+    description:
+      "Conversations that unpack the hardest disagreements and show how beliefs hold up under sustained scrutiny.",
+    detail: platformChannels[2].detail,
+    status: "planned",
+    features: [
+      "Episode archive tied to specific beliefs",
+      "Guest challengers with structured prep",
+      "Post-episode ruling updates when evidence shifts",
+    ],
+  },
+  community: {
+    slug: "community",
+    name: "Community",
+    headline: "Constructive participation",
+    description:
+      "Members gather evidence, question assumptions, and build reputation through useful challenges—not noise.",
+    detail: platformChannels[3].detail,
+    status: "planned",
+    features: [
+      "Reputation for evidence-backed challenges",
+      "Moderation aligned with the founding rule",
+      "Working groups around belief categories",
+    ],
+  },
+};
+
+export const roadmapItems = [
+  {
+    title: "Database (Postgres / Supabase)",
+    detail: "Move beliefs, challenges, revisions, and waitlist off JSON/Blob for querying and scale.",
+    status: "next" as const,
+  },
+  {
+    title: "Belief version history",
+    detail: "Public record of how each belief changed over time after rulings and edits.",
+    status: "done" as const,
+  },
+  {
+    title: "Social, podcast, and community channels",
+    detail: "Amplification layers that feed participation back into the website.",
+    status: "planned" as const,
+  },
+  {
+    title: "Stronger founder auth",
+    detail: "Move from shared key to signed-in founder sessions.",
+    status: "planned" as const,
+  },
+  {
+    title: "Web3 / on-chain timestamps",
+    detail: "Optional integrity layer after the core experience earns trust. No token in MVP.",
+    status: "future" as const,
   },
 ] as const;

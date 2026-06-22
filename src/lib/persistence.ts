@@ -4,9 +4,13 @@ import path from "node:path";
 
 const beliefsPath = path.join(process.cwd(), "data", "beliefs.json");
 const challengesPath = path.join(process.cwd(), "data", "challenges.json");
+const revisionsPath = path.join(process.cwd(), "data", "belief-revisions.json");
+const waitlistPath = path.join(process.cwd(), "data", "waitlist.json");
 
 const BLOB_BELIEFS = "cmb/beliefs.json";
 const BLOB_CHALLENGES = "cmb/challenges.json";
+const BLOB_REVISIONS = "cmb/belief-revisions.json";
+const BLOB_WAITLIST = "cmb/waitlist.json";
 const BLOB_ACCESS = "private" as const;
 
 /** IDs from the bundled benevolent-society seed; missing from live blob => stale data. */
@@ -161,4 +165,54 @@ export async function writeChallengesJson<T>(data: T): Promise<void> {
   }
 
   await writeLocalJson(challengesPath, data);
+}
+
+export async function readRevisionsJson<T>(): Promise<T> {
+  if (hasBlobStorage()) {
+    return readBlobJson<T>(BLOB_REVISIONS, revisionsPath);
+  }
+
+  try {
+    return await readLocalJson<T>(revisionsPath);
+  } catch {
+    return [] as T;
+  }
+}
+
+export async function writeRevisionsJson<T>(data: T): Promise<void> {
+  if (hasBlobStorage()) {
+    await writeBlobJson(BLOB_REVISIONS, data);
+    return;
+  }
+
+  await writeLocalJson(revisionsPath, data);
+}
+
+export async function readWaitlistJson<T>(): Promise<T> {
+  if (hasBlobStorage()) {
+    return readBlobJson<T>(BLOB_WAITLIST, waitlistPath);
+  }
+
+  try {
+    return await readLocalJson<T>(waitlistPath);
+  } catch {
+    return [] as T;
+  }
+}
+
+export async function writeWaitlistJson<T>(data: T): Promise<void> {
+  if (hasBlobStorage()) {
+    await writeBlobJson(BLOB_WAITLIST, data);
+    return;
+  }
+
+  await writeLocalJson(waitlistPath, data);
+}
+
+export function isBlobStorageConfigured(): boolean {
+  return hasBlobStorage();
+}
+
+export function isFounderKeyConfigured(): boolean {
+  return Boolean(process.env.FOUNDER_KEY);
 }

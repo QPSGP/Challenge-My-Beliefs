@@ -1,15 +1,18 @@
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { SectionHeading } from "@/components/section-heading";
+import { SystemStatusPanel } from "@/components/system-status-panel";
 import { getBundledBeliefCount } from "@/lib/persistence";
+import { getSystemStatus } from "@/lib/system-status";
 import { getBeliefs, getChallenges } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [beliefs, challenges, bundledBeliefCount] = await Promise.all([
+  const [beliefs, challenges, bundledBeliefCount, status] = await Promise.all([
     getBeliefs(),
     getChallenges(),
     getBundledBeliefCount(),
+    getSystemStatus(),
   ]);
 
   return (
@@ -19,6 +22,8 @@ export default async function AdminPage() {
         title="Manage beliefs, order, and rulings"
         description="Add beliefs, set their public order, record outcomes, and review challenges. Position #1 is your lead belief."
       />
+
+      <SystemStatusPanel status={status} />
 
       <AdminDashboard
         initialBeliefs={beliefs}

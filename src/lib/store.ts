@@ -3,14 +3,19 @@ import { slugify } from "@/lib/slug";
 import {
   readBeliefsJson,
   readChallengesJson,
+  readWaitlistJson,
   writeBeliefsJson,
   writeChallengesJson,
+  writeWaitlistJson,
 } from "@/lib/persistence";
+import { recordBeliefRevision, revisionKindForUpdate } from "@/lib/revisions";
 import type {
   Belief,
   Challenge,
+  ChannelInterest,
   CreateBeliefInput,
   CreateChallengeInput,
+  CreateChannelInterestInput,
   EditBeliefContentInput,
   UpdateBeliefInput,
   UpdateBeliefRulingInput,
@@ -64,6 +69,7 @@ export async function createBelief(input: CreateBeliefInput): Promise<Belief> {
 
   beliefs.push(belief);
   await writeBeliefsJson(beliefs);
+  await recordBeliefRevision(belief, "created");
   return belief;
 }
 
@@ -116,6 +122,7 @@ export async function updateBeliefRuling(
 
   beliefs[index] = updated;
   await writeBeliefsJson(beliefs);
+  await recordBeliefRevision(updated, "ruling");
   return updated;
 }
 
@@ -147,8 +154,9 @@ export async function updateBelief(
     return undefined;
   }
 
+  const before = beliefs[index];
   const updated: Belief = {
-    ...beliefs[index],
+    ...before,
     title: input.title.trim(),
     statement: input.statement.trim(),
     category: normalizeCategory(input.category),
@@ -156,12 +164,13 @@ export async function updateBelief(
     evidence: input.evidence.filter((item) => item.trim().length > 0),
     disproof: input.disproof.trim(),
     outcome: input.outcome,
-    rulingNote: input.rulingNote ?? beliefs[index].rulingNote,
+    rulingNote: input.rulingNote ?? before.rulingNote,
     updatedAt: new Date().toISOString(),
   };
 
   beliefs[index] = updated;
   await writeBeliefsJson(beliefs);
+  await recordBeliefRevision(updated, revisionKindForUpdate(before, updated));
   return updated;
 }
 
@@ -215,6 +224,46 @@ export async function createChallenge(input: CreateChallengeInput): Promise<Chal
   challenges.unshift(challenge);
   await writeChallengesJson(challenges);
   return challenge;
+}
+
+export async function createChannelInterest(
+  input: CreateChannelInterestInput,
+): Promise<ChannelInterest> {
+  const email = input.email.trim().toLowerCase();
+
+  if (!email.includes("@")) {
+    throw new Error("A valid email is required");
+  }
+
+  const waitlist = await readWaitlistJson<ChannelInterest[]>();
+  const duplicate = waitlist.some(
+    (entry) => entry.channel === input.channel && entry.email === email,
+  );
+
+  if (duplicate) {
+    throw new Error("You are already on the waitlist for this channel");
+  }
+
+  const entry: ChannelInterest = {
+    id: `waitlist-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    channel: input.channel,
+    email,
+    createdAt: new Date().toISOString(),
+  };
+
+  waitlist.unshift(entry);
+  await writeWaitlistJson(waitlist);
+  return entry;
+}
+
+export async function getChannelInterests(channel?: ChannelInterest["channel"]): Promise<ChannelInterest[]> {
+  const waitlist = await readWaitlistJson<ChannelInterest[]>();
+
+  if (!channel) {
+    return waitlist;
+  }
+
+  return waitlist.filter((entry) => entry.channel === channel);
 }
 
 export async function markChallengeReviewed(id: string): Promise<Challenge | undefined> {

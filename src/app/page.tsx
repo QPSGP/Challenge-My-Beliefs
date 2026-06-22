@@ -180,6 +180,14 @@ export default async function Home() {
             >
               <h3 className="text-xl font-semibold text-white">{channel.name}</h3>
               <p className="mt-3 text-base leading-7 text-slate-300">{channel.detail}</p>
+              {channel.name !== "Website" ? (
+                <Link
+                  href="/channels"
+                  className="mt-4 inline-block text-sm font-medium text-sky-300 hover:text-sky-200"
+                >
+                  Channel plans →
+                </Link>
+              ) : null}
             </article>
           ))}
         </div>

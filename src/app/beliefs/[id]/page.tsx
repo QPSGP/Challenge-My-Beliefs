@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { BeliefHistory } from "@/components/belief-history";
 import { CategoryBadge } from "@/components/category-badge";
 import { ChallengeForm } from "@/components/challenge-form";
 import { ChallengeList } from "@/components/challenge-list";
 import { FounderEditBanner } from "@/components/founder-edit-banner";
 import { OutcomeBadge } from "@/components/outcome-badge";
+import { getBeliefRevisions } from "@/lib/revisions";
 import { getBeliefById, getChallenges } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +25,7 @@ export default async function BeliefDetailPage({ params }: BeliefDetailPageProps
   }
 
   const challenges = await getChallenges(id);
+  const revisions = await getBeliefRevisions(id);
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-10 px-6 py-10 sm:px-10 lg:px-12">
@@ -92,6 +95,8 @@ export default async function BeliefDetailPage({ params }: BeliefDetailPageProps
           ) : null}
         </dl>
       </section>
+
+      <BeliefHistory revisions={revisions} />
 
       <div className="grid gap-10 xl:grid-cols-[1fr_1.1fr]">
         <ChallengeForm beliefId={belief.id} beliefTitle={belief.title} />

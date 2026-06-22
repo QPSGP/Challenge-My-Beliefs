@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BeliefEditor } from "@/components/belief-editor";
+import { BeliefHistory } from "@/components/belief-history";
+import { getBeliefRevisions } from "@/lib/revisions";
 import { getBeliefById } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +20,8 @@ export default async function EditBeliefPage({ params }: EditBeliefPageProps) {
     notFound();
   }
 
+  const revisions = await getBeliefRevisions(id);
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-8 px-6 py-10 sm:px-10">
       <div>
@@ -29,6 +33,8 @@ export default async function EditBeliefPage({ params }: EditBeliefPageProps) {
       </div>
 
       <BeliefEditor key={`${belief.id}-${belief.updatedAt}`} belief={belief} />
+
+      <BeliefHistory revisions={revisions} />
     </main>
   );
 }
