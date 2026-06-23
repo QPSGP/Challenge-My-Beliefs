@@ -106,6 +106,32 @@ export function AdminDashboard({
     router.refresh();
   }
 
+  async function setupDatabase() {
+    setMessage("Setting up database…");
+
+    const response = await fetch("/api/admin/setup-database", {
+      method: "POST",
+      headers: founderHeaders(founderKey),
+    });
+
+    const data = (await response.json()) as {
+      error?: string;
+      message?: string;
+      beliefCount?: number;
+    };
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Database setup failed.");
+      return;
+    }
+
+    setMessage(
+      data.message ??
+        `Database ready. Loaded ${data.beliefCount ?? bundledBeliefCount} beliefs.`,
+    );
+    router.refresh();
+  }
+
   return (
     <div className="space-y-10">
       <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
@@ -140,7 +166,25 @@ export function AdminDashboard({
         </div>
       </section>
 
-      {needsSeed ? (
+      {supabaseConfigured && !supabaseTablesReady ? (
+        <section className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-6">
+          <h2 className="text-xl font-semibold text-emerald-100">Finish Supabase setup</h2>
+          <p className="mt-2 text-sm leading-6 text-emerald-50/90">
+            Supabase is connected in Vercel, but the database tables are not created yet. Click once
+            below — this creates the tables and loads all 30 benevolent society beliefs. No SQL Editor
+            needed.
+          </p>
+          <button
+            type="button"
+            onClick={() => void setupDatabase()}
+            className="mt-4 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-5 py-3 text-sm font-semibold text-emerald-50 hover:bg-emerald-300/25"
+          >
+            Setup database and load beliefs
+          </button>
+        </section>
+      ) : null}
+
+      {needsSeed && supabaseTablesReady ? (
         <section className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
           <h2 className="text-xl font-semibold text-amber-100">
             Benevolent society beliefs not fully loaded

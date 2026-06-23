@@ -16,13 +16,21 @@ Supabase gives you **Postgres** in the cloud. When configured, the app uses it i
 3. Choose an organization, name (e.g. `challenge-my-beliefs`), database password, and region
 4. Wait for the project to finish provisioning (~2 minutes)
 
-## Step 2 — Run the database schema
+## Step 2 — Create database tables
 
-1. In Supabase: **SQL Editor** → **New query**
+**Easy way (recommended):** After Vercel redeploys with Supabase attached:
+
+1. Open **Founder** → `/admin`
+2. Click **Setup database and load beliefs** (green button)
+
+That creates all tables and loads the 30 beliefs automatically using `POSTGRES_URL` from Vercel.
+
+**Manual way (if the button fails):**
+
+1. Supabase → **SQL Editor** → **New query**
 2. Copy the full contents of [`supabase/schema.sql`](./supabase/schema.sql)
 3. Click **Run**
-
-You should see success with four tables: `beliefs`, `challenges`, `belief_revisions`, `channel_waitlist`.
+4. Return to `/admin` → **Load benevolent society beliefs**
 
 ## Step 3 — Copy API credentials
 

@@ -74,14 +74,12 @@ export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
       </p>
 
       {!supabase.tablesReady && supabase.configured ? (
-        <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-50">
-          <p className="font-semibold text-amber-100">Supabase connected — database not ready yet</p>
-          <p className="mt-2">{supabase.error}</p>
-          <ol className="mt-3 list-decimal space-y-1 pl-5 text-amber-50/90">
-            <li>Open your Supabase project → SQL Editor</li>
-            <li>Paste and run <code className="text-amber-100">supabase/schema.sql</code> from the repo</li>
-            <li>Return here and click Load benevolent society beliefs</li>
-          </ol>
+        <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm leading-6 text-emerald-50">
+          <p className="font-semibold text-emerald-100">Supabase connected — one click to finish</p>
+          <p className="mt-2">
+            Open the green <strong>Setup database and load beliefs</strong> button below. You do not
+            need to paste SQL manually unless that button fails.
+          </p>
         </div>
       ) : null}
 
