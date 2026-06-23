@@ -10,9 +10,15 @@ type BeliefOrderEditorProps = {
   beliefs: Belief[];
   founderKey: string;
   onMessage: (message: string) => void;
+  embedded?: boolean;
 };
 
-export function BeliefOrderEditor({ beliefs, founderKey, onMessage }: BeliefOrderEditorProps) {
+export function BeliefOrderEditor({
+  beliefs,
+  founderKey,
+  onMessage,
+  embedded = false,
+}: BeliefOrderEditorProps) {
   const router = useRouter();
   const [orderedIds, setOrderedIds] = useState(() => beliefs.map((belief) => belief.id));
   const [error, setError] = useState("");
@@ -72,14 +78,20 @@ export function BeliefOrderEditor({ beliefs, founderKey, onMessage }: BeliefOrde
     orderedIds.join("|") !== beliefs.map((belief) => belief.id).join("|");
 
   return (
-    <section className="space-y-4 rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
-      <div>
-        <h2 className="text-xl font-semibold text-white">Belief order</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-400">
-          Position #1 is your lead belief — what visitors see first. Use the arrows to
-          reorder, then save.
-        </p>
-      </div>
+    <section
+      className={
+        embedded ? "space-y-4" : "space-y-4 rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
+      }
+    >
+      {!embedded ? (
+        <div>
+          <h2 className="text-xl font-semibold text-white">Belief order</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            Position #1 is your lead belief — what visitors see first. Use the arrows to reorder,
+            then save.
+          </p>
+        </div>
+      ) : null}
 
       <ol className="space-y-3">
         {orderedIds.map((id, index) => {

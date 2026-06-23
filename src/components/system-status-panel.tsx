@@ -2,6 +2,7 @@ import type { SystemStatus } from "@/lib/system-status";
 
 type SystemStatusPanelProps = {
   status: SystemStatus;
+  embedded?: boolean;
 };
 
 function persistenceLabel(status: SystemStatus): string {
@@ -63,16 +64,11 @@ function StatusRow({
   );
 }
 
-export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
+export function SystemStatusPanel({ status, embedded = false }: SystemStatusPanelProps) {
   const supabase = status.supabase;
 
-  return (
-    <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
-      <h2 className="text-xl font-semibold text-white">System status</h2>
-      <p className="mt-2 text-sm leading-6 text-slate-400">
-        Use this checklist to confirm production is ready for founder edits and public data.
-      </p>
-
+  const content = (
+    <>
       {!supabase.tablesReady && supabase.configured ? (
         <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm leading-6 text-emerald-50">
           <p className="font-semibold text-emerald-100">Supabase connected — one click to finish</p>
@@ -156,6 +152,20 @@ export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
         <StatusRow label="Belief revisions" value={String(status.revisionCount)} />
         <StatusRow label="Channel waitlist" value={String(status.waitlistCount)} />
       </div>
+    </>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
+      <h2 className="text-xl font-semibold text-white">System status</h2>
+      <p className="mt-2 text-sm leading-6 text-slate-400">
+        Use this checklist to confirm production is ready for founder edits and public data.
+      </p>
+      {content}
     </section>
   );
 }

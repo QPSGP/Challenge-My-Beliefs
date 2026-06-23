@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { SETUP_SQL } from "@/lib/supabase/setup-sql";
 
-export function SupabaseSqlSetupPanel() {
+export function SupabaseSqlSetupPanel({ embedded = false }: { embedded?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   async function copySql() {
@@ -13,10 +13,9 @@ export function SupabaseSqlSetupPanel() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  return (
-    <section className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
-      <h2 className="text-xl font-semibold text-amber-100">Create tables in Supabase (2 minutes)</h2>
-      <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-amber-50/90">
+  const body = (
+    <>
+      <ol className="list-decimal space-y-2 pl-5 text-sm leading-6 text-amber-50/90">
         <li>
           Open your Supabase project → <strong>SQL Editor</strong> → <strong>New query</strong>
         </li>
@@ -48,6 +47,17 @@ export function SupabaseSqlSetupPanel() {
         className="mt-4 h-48 w-full rounded-2xl border border-slate-800 bg-slate-950/80 p-4 font-mono text-xs text-slate-300"
         aria-label="SQL to create database tables"
       />
+    </>
+  );
+
+  if (embedded) {
+    return body;
+  }
+
+  return (
+    <section className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
+      <h2 className="text-xl font-semibold text-amber-100">Create tables in Supabase (2 minutes)</h2>
+      <div className="mt-3">{body}</div>
     </section>
   );
 }

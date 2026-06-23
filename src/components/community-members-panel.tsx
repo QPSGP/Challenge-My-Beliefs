@@ -2,20 +2,12 @@ import type { ChannelInterest } from "@/lib/types";
 
 type CommunityMembersPanelProps = {
   members: ChannelInterest[];
+  embedded?: boolean;
 };
 
-export function CommunityMembersPanel({ members }: CommunityMembersPanelProps) {
-  return (
-    <section className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-semibold text-white">
-          Community signups ({members.length})
-        </h2>
-        <p className="mt-2 text-sm text-slate-400">
-          Early members who requested to join via /community.
-        </p>
-      </div>
-
+export function CommunityMembersPanel({ members, embedded = false }: CommunityMembersPanelProps) {
+  const content = (
+    <>
       {members.length === 0 ? (
         <p className="text-sm text-slate-500">No community signups yet.</p>
       ) : (
@@ -48,6 +40,24 @@ export function CommunityMembersPanel({ members }: CommunityMembersPanelProps) {
           ))}
         </ul>
       )}
+    </>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <section className="space-y-4">
+      <div>
+        <h2 className="text-2xl font-semibold text-white">
+          Community signups ({members.length})
+        </h2>
+        <p className="mt-2 text-sm text-slate-400">
+          Early members who requested to join via /community.
+        </p>
+      </div>
+      {content}
     </section>
   );
 }

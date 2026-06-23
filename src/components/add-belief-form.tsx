@@ -9,6 +9,7 @@ import { founderHeaders } from "@/lib/founder-client";
 type AddBeliefFormProps = {
   founderKey: string;
   onMessage: (message: string) => void;
+  embedded?: boolean;
 };
 
 type FormState = {
@@ -29,7 +30,7 @@ const initialState: FormState = {
   disproof: "",
 };
 
-export function AddBeliefForm({ founderKey, onMessage }: AddBeliefFormProps) {
+export function AddBeliefForm({ founderKey, onMessage, embedded = false }: AddBeliefFormProps) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(initialState);
   const [error, setError] = useState("");
@@ -81,15 +82,19 @@ export function AddBeliefForm({ founderKey, onMessage }: AddBeliefFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
+      className={
+        embedded ? "space-y-5" : "space-y-5 rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
+      }
     >
-      <div>
-        <h2 className="text-xl font-semibold text-white">Add a new belief</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-400">
-          New beliefs are appended to the end. Use the order controls below to move them
-          where you want.
-        </p>
-      </div>
+      {!embedded ? (
+        <div>
+          <h2 className="text-xl font-semibold text-white">Add a new belief</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            New beliefs are appended to the end. Use the order controls below to move them where
+            you want.
+          </p>
+        </div>
+      ) : null}
 
       <label className="block text-sm text-slate-300">
         Title *

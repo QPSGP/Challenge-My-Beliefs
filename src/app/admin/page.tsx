@@ -1,6 +1,5 @@
 import { AdminDashboard } from "@/components/admin-dashboard";
 import { SectionHeading } from "@/components/section-heading";
-import { SystemStatusPanel } from "@/components/system-status-panel";
 import { getBundledBeliefCount } from "@/lib/persistence";
 import { getSystemStatus } from "@/lib/system-status";
 import { getBeliefs, getChallenges, getChannelInterests } from "@/lib/store";
@@ -24,8 +23,6 @@ export default async function AdminPage() {
         description="Add beliefs, set their public order, record outcomes, and review challenges. Position #1 is your lead belief."
       />
 
-      <SystemStatusPanel status={status} />
-
       <AdminDashboard
         initialBeliefs={beliefs}
         initialChallenges={challenges}
@@ -34,6 +31,7 @@ export default async function AdminPage() {
         supabaseConfigured={status.supabase.configured}
         usingSupabase={status.persistence === "supabase" && status.supabase.tablesReady}
         supabaseTablesReady={status.supabase.tablesReady}
+        systemStatus={status}
       />
     </main>
   );

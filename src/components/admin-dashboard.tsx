@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { AddBeliefForm } from "@/components/add-belief-form";
-import { CommunityMembersPanel } from "@/components/community-members-panel";
+import { AdminAccordionSection } from "@/components/admin-accordion-section";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
 import { CategoryBadge } from "@/components/category-badge";
+import { CommunityMembersPanel } from "@/components/community-members-panel";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import { SupabaseSqlSetupPanel } from "@/components/supabase-sql-setup-panel";
+import { SystemStatusPanel } from "@/components/system-status-panel";
 import { founderHeaders, getFounderKey, setFounderKey } from "@/lib/founder-client";
+import type { SystemStatus } from "@/lib/system-status";
 import type { Belief, Challenge, ChannelInterest } from "@/lib/types";
 
 type AdminDashboardProps = {
@@ -21,6 +24,7 @@ type AdminDashboardProps = {
   supabaseConfigured: boolean;
   usingSupabase: boolean;
   supabaseTablesReady: boolean;
+  systemStatus: SystemStatus;
 };
 
 export function AdminDashboard({
@@ -31,10 +35,16 @@ export function AdminDashboard({
   supabaseConfigured,
   usingSupabase,
   supabaseTablesReady,
+  systemStatus,
 }: AdminDashboardProps) {
   const router = useRouter();
   const [founderKey, setFounderKeyState] = useState("");
   const [message, setMessage] = useState("");
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  function toggleSection(id: string) {
+    setOpenSection((current) => (current === id ? null : id));
+  }
 
   async function markReviewed(challengeId: string) {
     setMessage("");
@@ -137,13 +147,31 @@ export function AdminDashboard({
   }
 
   return (
-    <div className="space-y-10">
-      <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
-        <h2 className="text-xl font-semibold text-white">Founder access</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-400">
-          Save your key here once, then edit any belief below.
+    <div className="space-y-4">
+      {message ? (
+        <p className="rounded-2xl border border-sky-400/30 bg-sky-400/10 px-5 py-4 text-sm text-sky-100">
+          {message}
         </p>
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+      ) : null}
+
+      <AdminAccordionSection
+        id="system-status"
+        title="System status"
+        description="Confirm production is ready for founder edits and public data."
+        isOpen={openSection === "system-status"}
+        onToggle={toggleSection}
+      >
+        <SystemStatusPanel status={systemStatus} embedded />
+      </AdminAccordionSection>
+
+      <AdminAccordionSection
+        id="founder-access"
+        title="Founder access"
+        description="Save your key here once, then edit any belief below."
+        isOpen={openSection === "founder-access"}
+        onToggle={toggleSection}
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
           <input
             className="flex-1 rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-slate-100 outline-none focus:ring-2 focus:ring-sky-400/40"
             value={founderKey}
@@ -168,37 +196,53 @@ export function AdminDashboard({
             Save key
           </button>
         </div>
-      </section>
+      </AdminAccordionSection>
 
       {supabaseConfigured && !supabaseTablesReady ? (
         <>
-          <SupabaseSqlSetupPanel />
-          <section className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-6">
-            <h2 className="text-xl font-semibold text-emerald-100">After running the SQL above</h2>
-            <p className="mt-2 text-sm leading-6 text-emerald-50/90">
-              Click below to load all 30 benevolent society beliefs into Supabase.
-            </p>
+          <AdminAccordionSection
+            id="supabase-sql"
+            title="Create tables in Supabase"
+            description="Copy SQL into Supabase if the one-click setup button is not available."
+            isOpen={openSection === "supabase-sql"}
+            onToggle={toggleSection}
+            tone="amber"
+          >
+            <SupabaseSqlSetupPanel embedded />
+          </AdminAccordionSection>
+
+          <AdminAccordionSection
+            id="setup-database"
+            title="Setup database and load beliefs"
+            description="Load all 30 benevolent society beliefs into Supabase after the schema exists."
+            isOpen={openSection === "setup-database"}
+            onToggle={toggleSection}
+            tone="emerald"
+          >
             <button
               type="button"
               onClick={() => void setupDatabase()}
-              className="mt-4 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-5 py-3 text-sm font-semibold text-emerald-50 hover:bg-emerald-300/25"
+              className="rounded-full border border-emerald-300/40 bg-emerald-300/15 px-5 py-3 text-sm font-semibold text-emerald-50 hover:bg-emerald-300/25"
             >
               Setup database and load beliefs
             </button>
-          </section>
+          </AdminAccordionSection>
         </>
       ) : null}
 
       {needsSeed && supabaseTablesReady ? (
-        <section className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
-          <h2 className="text-xl font-semibold text-amber-100">
-            Benevolent society beliefs not fully loaded
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-amber-50/80">
-            The live site is showing {initialBeliefs.length} belief
-            {initialBeliefs.length === 1 ? "" : "s"}, but the seed file has {bundledBeliefCount}{" "}
-            beliefs for a unified benevolent society (core ten plus extended list). Load them now to
-            replace the current live list.
+        <AdminAccordionSection
+          id="load-seed"
+          title="Load benevolent society beliefs"
+          description={`The live site shows ${initialBeliefs.length} beliefs, but the seed file has ${bundledBeliefCount}.`}
+          badge={`${initialBeliefs.length}/${bundledBeliefCount}`}
+          isOpen={openSection === "load-seed"}
+          onToggle={toggleSection}
+          tone="amber"
+        >
+          <p className="text-sm leading-6 text-amber-50/80">
+            Load them now to replace the current live list with the full unified benevolent society
+            set (core ten plus extended list).
           </p>
           <button
             type="button"
@@ -207,46 +251,74 @@ export function AdminDashboard({
           >
             Load {bundledBeliefCount} benevolent society beliefs
           </button>
-        </section>
+        </AdminAccordionSection>
       ) : null}
 
       {supabaseConfigured && supabaseTablesReady ? (
-        <section className="rounded-3xl border border-sky-400/30 bg-sky-400/10 p-6">
-          <h2 className="text-xl font-semibold text-sky-100">Import into Supabase</h2>
-          <p className="mt-2 text-sm leading-6 text-sky-50/80">
-            Copy beliefs, challenges, revisions, and waitlist from JSON/Blob into Postgres. Run the
-            SQL schema in Supabase first (see SUPABASE.md). Safe to run once after setup.
-          </p>
+        <AdminAccordionSection
+          id="migrate-supabase"
+          title="Import into Supabase"
+          description="Copy beliefs, challenges, revisions, and waitlist from JSON/Blob into Postgres."
+          isOpen={openSection === "migrate-supabase"}
+          onToggle={toggleSection}
+          tone="sky"
+        >
           <button
             type="button"
             onClick={() => void migrateToSupabase()}
-            className="mt-4 rounded-full border border-sky-300/40 bg-sky-300/15 px-5 py-3 text-sm font-semibold text-sky-50 hover:bg-sky-300/25"
+            className="rounded-full border border-sky-300/40 bg-sky-300/15 px-5 py-3 text-sm font-semibold text-sky-50 hover:bg-sky-300/25"
           >
             {usingSupabase ? "Re-import from JSON/Blob" : "Migrate to Supabase"}
           </button>
-        </section>
+        </AdminAccordionSection>
       ) : null}
 
-      {message ? <p className="text-sm text-sky-300">{message}</p> : null}
+      <AdminAccordionSection
+        id="community-signups"
+        title="Community signups"
+        description="Early members who requested to join via /community."
+        badge={String(communityMembers.length)}
+        isOpen={openSection === "community-signups"}
+        onToggle={toggleSection}
+        tone="violet"
+      >
+        <CommunityMembersPanel members={communityMembers} embedded />
+      </AdminAccordionSection>
 
-      <CommunityMembersPanel members={communityMembers} />
+      <AdminAccordionSection
+        id="belief-order"
+        title="Belief order"
+        description="Position #1 is your lead belief. Reorder, then save."
+        isOpen={openSection === "belief-order"}
+        onToggle={toggleSection}
+      >
+        <BeliefOrderEditor
+          key={beliefOrderKey}
+          beliefs={initialBeliefs}
+          founderKey={founderKey}
+          onMessage={setMessage}
+          embedded
+        />
+      </AdminAccordionSection>
 
-      <BeliefOrderEditor
-        key={beliefOrderKey}
-        beliefs={initialBeliefs}
-        founderKey={founderKey}
-        onMessage={setMessage}
-      />
+      <AdminAccordionSection
+        id="add-belief"
+        title="Add a new belief"
+        description="New beliefs are appended to the end. Use belief order to move them."
+        isOpen={openSection === "add-belief"}
+        onToggle={toggleSection}
+      >
+        <AddBeliefForm founderKey={founderKey} onMessage={setMessage} embedded />
+      </AdminAccordionSection>
 
-      <AddBeliefForm founderKey={founderKey} onMessage={setMessage} />
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-white">Edit a specific belief</h2>
-        <p className="text-sm text-slate-400">
-          Open any belief to change its statement, evidence, disproof standard, and ruling in one
-          place.
-        </p>
-
+      <AdminAccordionSection
+        id="edit-beliefs"
+        title="Edit a specific belief"
+        description="Open any belief to change its statement, evidence, disproof standard, and ruling."
+        badge={String(initialBeliefs.length)}
+        isOpen={openSection === "edit-beliefs"}
+        onToggle={toggleSection}
+      >
         {initialBeliefs.length === 0 ? (
           <p className="text-sm text-slate-500">No beliefs yet.</p>
         ) : (
@@ -279,45 +351,51 @@ export function AdminDashboard({
             ))}
           </ul>
         )}
-      </section>
+      </AdminAccordionSection>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold text-white">
-          Pending challenges ({pendingChallenges.length})
-        </h2>
-
+      <AdminAccordionSection
+        id="pending-challenges"
+        title="Pending challenges"
+        description="Review submitted challenges and mark them reviewed when handled."
+        badge={String(pendingChallenges.length)}
+        isOpen={openSection === "pending-challenges"}
+        onToggle={toggleSection}
+        tone="emerald"
+      >
         {pendingChallenges.length === 0 ? (
           <p className="text-sm text-slate-400">No pending challenges right now.</p>
         ) : (
-          pendingChallenges.map((challenge) => {
-            const belief = initialBeliefs.find((item) => item.id === challenge.beliefId);
+          <div className="space-y-4">
+            {pendingChallenges.map((challenge) => {
+              const belief = initialBeliefs.find((item) => item.id === challenge.beliefId);
 
-            return (
-              <article
-                key={challenge.id}
-                className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
-              >
-                <p className="text-sm uppercase tracking-[0.16em] text-sky-300">
-                  {belief?.title ?? challenge.beliefId}
-                </p>
-                <p className="mt-2 font-medium text-white">{challenge.challengerName}</p>
-                <p className="mt-3 text-sm leading-7 text-slate-300">{challenge.argument}</p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  <span className="font-semibold text-slate-500">Evidence: </span>
-                  {challenge.evidence}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => void markReviewed(challenge.id)}
-                  className="mt-4 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-2 text-sm text-emerald-200 hover:bg-emerald-400/20"
+              return (
+                <article
+                  key={challenge.id}
+                  className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
                 >
-                  Mark reviewed
-                </button>
-              </article>
-            );
-          })
+                  <p className="text-sm uppercase tracking-[0.16em] text-sky-300">
+                    {belief?.title ?? challenge.beliefId}
+                  </p>
+                  <p className="mt-2 font-medium text-white">{challenge.challengerName}</p>
+                  <p className="mt-3 text-sm leading-7 text-slate-300">{challenge.argument}</p>
+                  <p className="mt-3 text-sm leading-7 text-slate-400">
+                    <span className="font-semibold text-slate-500">Evidence: </span>
+                    {challenge.evidence}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => void markReviewed(challenge.id)}
+                    className="mt-4 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-2 text-sm text-emerald-200 hover:bg-emerald-400/20"
+                  >
+                    Mark reviewed
+                  </button>
+                </article>
+              );
+            })}
+          </div>
         )}
-      </section>
+      </AdminAccordionSection>
     </div>
   );
 }
