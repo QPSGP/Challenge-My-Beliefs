@@ -7,13 +7,16 @@ import { getBeliefs, getChallenges, getChannelInterests } from "@/lib/store";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [beliefs, challenges, communityMembers, bundledBeliefCount, status] = await Promise.all([
-    getBeliefs(),
-    getChallenges(),
-    getChannelInterests("community"),
-    getBundledBeliefCount(),
-    getSystemStatus(),
-  ]);
+  const [beliefs, challenges, communityMembers, podcastWaitlist, socialWaitlist, bundledBeliefCount, status] =
+    await Promise.all([
+      getBeliefs(),
+      getChallenges(),
+      getChannelInterests("community"),
+      getChannelInterests("podcast"),
+      getChannelInterests("social"),
+      getBundledBeliefCount(),
+      getSystemStatus(),
+    ]);
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-10 px-6 py-10 sm:px-10 lg:px-12">
@@ -27,6 +30,8 @@ export default async function AdminPage() {
         initialBeliefs={beliefs}
         initialChallenges={challenges}
         communityMembers={communityMembers}
+        podcastWaitlist={podcastWaitlist}
+        socialWaitlist={socialWaitlist}
         bundledBeliefCount={bundledBeliefCount}
         supabaseConfigured={status.supabase.configured}
         usingSupabase={status.persistence === "supabase" && status.supabase.tablesReady}

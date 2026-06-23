@@ -8,7 +8,7 @@ import { AddBeliefForm } from "@/components/add-belief-form";
 import { AdminAccordionSection } from "@/components/admin-accordion-section";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
 import { CategoryBadge } from "@/components/category-badge";
-import { CommunityMembersPanel } from "@/components/community-members-panel";
+import { ChannelWaitlistPanel } from "@/components/channel-waitlist-panel";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import { SupabaseSqlSetupPanel } from "@/components/supabase-sql-setup-panel";
 import { SystemStatusPanel } from "@/components/system-status-panel";
@@ -20,6 +20,8 @@ type AdminDashboardProps = {
   initialBeliefs: Belief[];
   initialChallenges: Challenge[];
   communityMembers: ChannelInterest[];
+  podcastWaitlist: ChannelInterest[];
+  socialWaitlist: ChannelInterest[];
   bundledBeliefCount: number;
   supabaseConfigured: boolean;
   usingSupabase: boolean;
@@ -31,6 +33,8 @@ export function AdminDashboard({
   initialBeliefs,
   initialChallenges,
   communityMembers,
+  podcastWaitlist,
+  socialWaitlist,
   bundledBeliefCount,
   supabaseConfigured,
   usingSupabase,
@@ -282,7 +286,43 @@ export function AdminDashboard({
         onToggle={toggleSection}
         tone="violet"
       >
-        <CommunityMembersPanel members={communityMembers} embedded />
+        <ChannelWaitlistPanel
+          entries={communityMembers}
+          embedded
+          emptyMessage="No community signups yet."
+        />
+      </AdminAccordionSection>
+
+      <AdminAccordionSection
+        id="podcast-waitlist"
+        title="Podcast waitlist"
+        description="People who asked to be notified when the podcast channel launches."
+        badge={String(podcastWaitlist.length)}
+        isOpen={openSection === "podcast-waitlist"}
+        onToggle={toggleSection}
+        tone="violet"
+      >
+        <ChannelWaitlistPanel
+          entries={podcastWaitlist}
+          embedded
+          emptyMessage="No podcast waitlist signups yet."
+        />
+      </AdminAccordionSection>
+
+      <AdminAccordionSection
+        id="social-waitlist"
+        title="Social waitlist"
+        description="People who asked to be notified when social accounts launch."
+        badge={String(socialWaitlist.length)}
+        isOpen={openSection === "social-waitlist"}
+        onToggle={toggleSection}
+        tone="violet"
+      >
+        <ChannelWaitlistPanel
+          entries={socialWaitlist}
+          embedded
+          emptyMessage="No social waitlist signups yet."
+        />
       </AdminAccordionSection>
 
       <AdminAccordionSection
