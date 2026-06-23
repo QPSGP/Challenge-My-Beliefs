@@ -8,6 +8,7 @@ import { AddBeliefForm } from "@/components/add-belief-form";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
 import { CategoryBadge } from "@/components/category-badge";
 import { OutcomeBadge } from "@/components/outcome-badge";
+import { SupabaseSqlSetupPanel } from "@/components/supabase-sql-setup-panel";
 import { founderHeaders, getFounderKey, setFounderKey } from "@/lib/founder-client";
 import type { Belief, Challenge } from "@/lib/types";
 
@@ -167,21 +168,22 @@ export function AdminDashboard({
       </section>
 
       {supabaseConfigured && !supabaseTablesReady ? (
-        <section className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-6">
-          <h2 className="text-xl font-semibold text-emerald-100">Finish Supabase setup</h2>
-          <p className="mt-2 text-sm leading-6 text-emerald-50/90">
-            Supabase is connected in Vercel, but the database tables are not created yet. Click once
-            below — this creates the tables and loads all 30 benevolent society beliefs. No SQL Editor
-            needed.
-          </p>
-          <button
-            type="button"
-            onClick={() => void setupDatabase()}
-            className="mt-4 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-5 py-3 text-sm font-semibold text-emerald-50 hover:bg-emerald-300/25"
-          >
-            Setup database and load beliefs
-          </button>
-        </section>
+        <>
+          <SupabaseSqlSetupPanel />
+          <section className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-6">
+            <h2 className="text-xl font-semibold text-emerald-100">After running the SQL above</h2>
+            <p className="mt-2 text-sm leading-6 text-emerald-50/90">
+              Click below to load all 30 benevolent society beliefs into Supabase.
+            </p>
+            <button
+              type="button"
+              onClick={() => void setupDatabase()}
+              className="mt-4 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-5 py-3 text-sm font-semibold text-emerald-50 hover:bg-emerald-300/25"
+            >
+              Setup database and load beliefs
+            </button>
+          </section>
+        </>
       ) : null}
 
       {needsSeed && supabaseTablesReady ? (

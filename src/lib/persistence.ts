@@ -51,7 +51,7 @@ export class SupabaseSchemaNotReadyError extends Error {
   constructor(detail?: string) {
     super(
       detail ??
-        "Supabase tables are missing. Open Supabase → SQL Editor, run supabase/schema.sql from the repo, then try again.",
+        "Supabase tables are missing. On /admin: copy the SQL, run it in Supabase SQL Editor, then click Setup database and load beliefs.",
     );
     this.name = "SupabaseSchemaNotReadyError";
   }

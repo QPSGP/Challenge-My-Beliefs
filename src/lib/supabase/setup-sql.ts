@@ -1,4 +1,5 @@
--- Challenge My Beliefs — run in Supabase SQL Editor (Dashboard → SQL → New query)
+/** Full SQL for Supabase SQL Editor — kept in sync with supabase/schema.sql */
+export const SETUP_SQL = `-- Challenge My Beliefs — paste in Supabase SQL Editor and click Run
 
 create table if not exists public.beliefs (
   id text primary key,
@@ -53,6 +54,5 @@ alter table public.challenges enable row level security;
 alter table public.belief_revisions enable row level security;
 alter table public.channel_waitlist enable row level security;
 
--- Server uses the service role key (bypasses RLS). No public policies yet.
-
 notify pgrst, 'reload schema';
+`;
