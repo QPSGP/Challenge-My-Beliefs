@@ -20,3 +20,10 @@ export function founderHeaders(extraKey = ""): HeadersInit {
 
   return headers;
 }
+
+export function founderRequestInit(extraKey = ""): RequestInit {
+  return {
+    headers: founderHeaders(extraKey),
+    credentials: "include",
+  };
+}

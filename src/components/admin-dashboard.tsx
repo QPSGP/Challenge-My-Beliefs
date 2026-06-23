@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AddBeliefForm } from "@/components/add-belief-form";
 import { AdminAccordionSection } from "@/components/admin-accordion-section";
@@ -12,7 +12,8 @@ import { ChannelWaitlistPanel } from "@/components/channel-waitlist-panel";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import { SupabaseSqlSetupPanel } from "@/components/supabase-sql-setup-panel";
 import { SystemStatusPanel } from "@/components/system-status-panel";
-import { founderHeaders, getFounderKey, setFounderKey } from "@/lib/founder-client";
+import { WaitlistExportButton } from "@/components/waitlist-export-button";
+import { founderRequestInit, getFounderKey, setFounderKey } from "@/lib/founder-client";
 import type { SystemStatus } from "@/lib/system-status";
 import type { Belief, Challenge, ChannelInterest } from "@/lib/types";
 
@@ -45,6 +46,20 @@ export function AdminDashboard({
   const [founderKey, setFounderKeyState] = useState("");
   const [message, setMessage] = useState("");
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const [sessionSignedIn, setSessionSignedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    void fetch("/api/admin/session", { credentials: "include" })
+      .then((response) => response.json())
+      .then((data: { signedIn?: boolean }) => {
+        setSessionSignedIn(Boolean(data.signedIn));
+      })
+      .catch(() => {
+        setSessionSignedIn(false);
+      });
+  }, []);
+
+  const allWaitlistEntries = [...communityMembers, ...podcastWaitlist, ...socialWaitlist];
 
   function toggleSection(id: string) {
     setOpenSection((current) => (current === id ? null : id));
@@ -55,7 +70,7 @@ export function AdminDashboard({
 
     const response = await fetch("/api/challenges", {
       method: "PATCH",
-      headers: founderHeaders(founderKey),
+      ...founderRequestInit(founderKey),
       body: JSON.stringify({ id: challengeId }),
     });
 
@@ -82,7 +97,7 @@ export function AdminDashboard({
 
     const response = await fetch("/api/beliefs/seed", {
       method: "POST",
-      headers: founderHeaders(founderKey),
+      ...founderRequestInit(founderKey),
     });
 
     const data = (await response.json()) as { error?: string; count?: number };
@@ -101,7 +116,7 @@ export function AdminDashboard({
 
     const response = await fetch("/api/admin/migrate-supabase", {
       method: "POST",
-      headers: founderHeaders(founderKey),
+      ...founderRequestInit(founderKey),
     });
 
     const data = (await response.json()) as {
@@ -124,12 +139,57 @@ export function AdminDashboard({
     router.refresh();
   }
 
+  async function signInWithSession() {
+    setMessage("");
+
+    const response = await fetch("/api/admin/session", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: founderKey }),
+    });
+
+    const data = (await response.json()) as {
+      error?: string;
+      message?: string;
+      signedIn?: boolean;
+    };
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Could not sign in.");
+      setSessionSignedIn(false);
+      return;
+    }
+
+    setSessionSignedIn(Boolean(data.signedIn));
+    setMessage(data.message ?? "Signed in for 7 days.");
+  }
+
+  async function signOutSession() {
+    setMessage("");
+
+    const response = await fetch("/api/admin/session", {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const data = (await response.json()) as { message?: string; signedIn?: boolean };
+
+    if (!response.ok) {
+      setMessage("Could not sign out.");
+      return;
+    }
+
+    setSessionSignedIn(Boolean(data.signedIn));
+    setMessage(data.message ?? "Signed out.");
+  }
+
   async function setupDatabase() {
     setMessage("Setting up database…");
 
     const response = await fetch("/api/admin/setup-database", {
       method: "POST",
-      headers: founderHeaders(founderKey),
+      ...founderRequestInit(founderKey),
     });
 
     const data = (await response.json()) as {
@@ -171,34 +231,69 @@ export function AdminDashboard({
       <AdminAccordionSection
         id="founder-access"
         title="Founder access"
-        description="Save your key here once, then edit any belief below."
+        description="Sign in with your founder key for a 7-day session, or save the key in this browser."
         isOpen={openSection === "founder-access"}
         onToggle={toggleSection}
       >
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            className="flex-1 rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-slate-100 outline-none focus:ring-2 focus:ring-sky-400/40"
-            value={founderKey}
-            onChange={(event) => setFounderKeyState(event.target.value)}
-            placeholder="Founder key (optional locally)"
-          />
-          <button
-            type="button"
-            onClick={() => setFounderKeyState(getFounderKey())}
-            className="rounded-full border border-slate-700 px-5 py-3 text-sm text-slate-200 hover:border-sky-400/40"
-          >
-            Load saved
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setFounderKey(founderKey);
-              setMessage("Founder key saved in this browser.");
-            }}
-            className="rounded-full border border-slate-700 px-5 py-3 text-sm text-slate-200 hover:border-sky-400/40"
-          >
-            Save key
-          </button>
+        <div className="space-y-4">
+          {sessionSignedIn === null ? (
+            <p className="text-sm text-slate-400">Checking sign-in status…</p>
+          ) : (
+            <p
+              className={`text-sm font-medium ${sessionSignedIn ? "text-emerald-300" : "text-amber-300"}`}
+            >
+              {sessionSignedIn
+                ? "Signed in — founder actions use your secure session."
+                : systemStatus.founderKeyRequired
+                  ? "Not signed in — enter your founder key below."
+                  : "Founder key not required in this environment."}
+            </p>
+          )}
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <input
+              className="flex-1 rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-slate-100 outline-none focus:ring-2 focus:ring-sky-400/40"
+              value={founderKey}
+              onChange={(event) => setFounderKeyState(event.target.value)}
+              placeholder="Founder key"
+            />
+            <button
+              type="button"
+              onClick={() => setFounderKeyState(getFounderKey())}
+              className="rounded-full border border-slate-700 px-5 py-3 text-sm text-slate-200 hover:border-sky-400/40"
+            >
+              Load saved
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFounderKey(founderKey);
+                setMessage("Founder key saved in this browser.");
+              }}
+              className="rounded-full border border-slate-700 px-5 py-3 text-sm text-slate-200 hover:border-sky-400/40"
+            >
+              Save key
+            </button>
+          </div>
+
+          {systemStatus.founderKeyRequired ? (
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => void signInWithSession()}
+                className="rounded-full border border-emerald-400/40 bg-emerald-400/15 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-emerald-400/25"
+              >
+                Sign in (7 days)
+              </button>
+              <button
+                type="button"
+                onClick={() => void signOutSession()}
+                className="rounded-full border border-slate-700 px-5 py-3 text-sm text-slate-200 hover:border-sky-400/40"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : null}
         </div>
       </AdminAccordionSection>
 
@@ -278,6 +373,44 @@ export function AdminDashboard({
       ) : null}
 
       <AdminAccordionSection
+        id="operational-tools"
+        title="Operational tools"
+        description="Export waitlists for outreach and check email alert configuration in System status."
+        badge={String(allWaitlistEntries.length)}
+        isOpen={openSection === "operational-tools"}
+        onToggle={toggleSection}
+        tone="sky"
+      >
+        <div className="flex flex-wrap gap-3">
+          <WaitlistExportButton
+            entries={allWaitlistEntries}
+            filename="challenge-my-beliefs-all-waitlists.csv"
+            label="Export all waitlists"
+          />
+          <WaitlistExportButton
+            entries={communityMembers}
+            filename="community-signups.csv"
+            label="Export community"
+          />
+          <WaitlistExportButton
+            entries={podcastWaitlist}
+            filename="podcast-waitlist.csv"
+            label="Export podcast"
+          />
+          <WaitlistExportButton
+            entries={socialWaitlist}
+            filename="social-waitlist.csv"
+            label="Export social"
+          />
+        </div>
+        <p className="mt-4 text-sm leading-6 text-slate-400">
+          Email alerts send when someone submits a challenge or joins a waitlist. Add{" "}
+          <code className="text-sky-200">RESEND_API_KEY</code> and{" "}
+          <code className="text-sky-200">FOUNDER_NOTIFY_EMAIL</code> in Vercel, then redeploy.
+        </p>
+      </AdminAccordionSection>
+
+      <AdminAccordionSection
         id="community-signups"
         title="Community signups"
         description="Early members who requested to join via /community."
@@ -286,6 +419,12 @@ export function AdminDashboard({
         onToggle={toggleSection}
         tone="violet"
       >
+        <div className="mb-4 flex justify-end">
+          <WaitlistExportButton
+            entries={communityMembers}
+            filename="community-signups.csv"
+          />
+        </div>
         <ChannelWaitlistPanel
           entries={communityMembers}
           embedded
@@ -302,6 +441,9 @@ export function AdminDashboard({
         onToggle={toggleSection}
         tone="violet"
       >
+        <div className="mb-4 flex justify-end">
+          <WaitlistExportButton entries={podcastWaitlist} filename="podcast-waitlist.csv" />
+        </div>
         <ChannelWaitlistPanel
           entries={podcastWaitlist}
           embedded
@@ -318,6 +460,9 @@ export function AdminDashboard({
         onToggle={toggleSection}
         tone="violet"
       >
+        <div className="mb-4 flex justify-end">
+          <WaitlistExportButton entries={socialWaitlist} filename="social-waitlist.csv" />
+        </div>
         <ChannelWaitlistPanel
           entries={socialWaitlist}
           embedded

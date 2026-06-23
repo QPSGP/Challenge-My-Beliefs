@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { founderHeaders } from "@/lib/founder-client";
+import { founderRequestInit } from "@/lib/founder-client";
 import type { Belief } from "@/lib/types";
 
 type BeliefOrderEditorProps = {
@@ -54,7 +54,7 @@ export function BeliefOrderEditor({
     try {
       const response = await fetch("/api/beliefs/reorder", {
         method: "PUT",
-        headers: founderHeaders(founderKey),
+        ...founderRequestInit(founderKey),
         body: JSON.stringify({ ids: orderedIds }),
       });
 

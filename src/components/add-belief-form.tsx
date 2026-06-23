@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { CategoryField } from "@/components/category-field";
-import { founderHeaders } from "@/lib/founder-client";
+import { founderRequestInit } from "@/lib/founder-client";
 
 type AddBeliefFormProps = {
   founderKey: string;
@@ -48,7 +48,7 @@ export function AddBeliefForm({ founderKey, onMessage, embedded = false }: AddBe
     try {
       const response = await fetch("/api/beliefs", {
         method: "POST",
-        headers: founderHeaders(founderKey),
+        ...founderRequestInit(founderKey),
         body: JSON.stringify({
           title: form.title,
           statement: form.statement,

@@ -124,22 +124,40 @@ If beliefs show fewer than 30, click **Load benevolent society beliefs** on the 
 
 ## 6. Optional: set FOUNDER_KEY
 
-When set, all founder API routes require the `x-founder-key` header to match.
+When set, founder API routes accept either the `x-founder-key` header **or** a signed-in session from `/admin` → **Founder access** → **Sign in (7 days)**.
 
 1. Vercel → **Settings** → **Environment Variables** → add `FOUNDER_KEY`
 2. Redeploy
-3. Open `/admin`, enter the same key, click **Save key**
+3. On `/admin`, enter the same key and click **Sign in (7 days)** (or **Save key** for the legacy browser header)
 
-If unset, founder actions work without a key (fine for early testing; set before going public).
+Optional: set `FOUNDER_SESSION_SECRET` for a separate session signing secret.
 
-## 7. What's next (not in MVP)
+## 7. Optional: email alerts (Resend)
+
+Get notified when someone submits a challenge or joins a waitlist.
+
+1. Create a free account at [resend.com](https://resend.com) and create an API key
+2. Vercel → **Environment Variables**:
+   - `RESEND_API_KEY` — your Resend API key
+   - `FOUNDER_NOTIFY_EMAIL` — your inbox (e.g. `you@example.com`)
+3. Redeploy
+4. `/admin` → **System status** should show **Email alerts: Configured**
+
+Until you verify a custom domain in Resend, the default sender is `onboarding@resend.dev` (fine for testing to your own email).
+
+For local dev, copy `env.example` to `.env.local` and set the same variables.
+
+## 8. What's next (not in MVP)
 
 | Item | Status | Notes |
 |------|--------|-------|
 | Belief version history | Shipped | Visible on each belief page |
-| Social / podcast / community | Planned | `/channels` + waitlist |
+| Community channel | Beta | `/community` + admin signups |
+| Social / podcast previews | Shipped | Waitlists + share on beliefs |
+| Email alerts + CSV export | Shipped | Resend + `/admin` operational tools |
 | Postgres / Supabase | Shipped | [SUPABASE.md](./SUPABASE.md) |
-| Full founder auth | Planned | Replace shared key with sessions |
+| Founder session sign-in | Shipped | `/admin` → Sign in (7 days) |
+| Live podcast / social accounts | Planned | After community beta |
 | Web3 timestamps | Future | No token in MVP |
 
 ### Local development

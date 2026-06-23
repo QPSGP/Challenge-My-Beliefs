@@ -1,12 +1,6 @@
-import {
-  getBundledBeliefCount,
-  getPersistenceMode,
-  readBeliefsJson,
-  readChallengesJson,
-  readRevisionsJson,
-  readWaitlistJson,
-} from "@/lib/persistence";
+import { getBundledBeliefCount, getPersistenceMode, readBeliefsJson, readChallengesJson, readRevisionsJson, readWaitlistJson } from "@/lib/persistence";
 import { checkSupabaseHealth, type SupabaseHealth } from "@/lib/supabase/health";
+import { isEmailConfigured } from "@/lib/email";
 
 export type SystemStatus = {
   runtime: "local" | "vercel";
@@ -20,6 +14,7 @@ export type SystemStatus = {
   challengeCount: number;
   revisionCount: number;
   waitlistCount: number;
+  emailNotificationsConfigured: boolean;
 };
 
 export async function getSystemStatus(): Promise<SystemStatus> {
@@ -48,5 +43,6 @@ export async function getSystemStatus(): Promise<SystemStatus> {
     challengeCount: Array.isArray(challenges) ? challenges.length : 0,
     revisionCount: Array.isArray(revisions) ? revisions.length : 0,
     waitlistCount: Array.isArray(waitlist) ? waitlist.length : 0,
+    emailNotificationsConfigured: isEmailConfigured(),
   };
 }

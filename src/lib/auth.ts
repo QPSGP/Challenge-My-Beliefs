@@ -1,10 +1,18 @@
-export function isFounderAuthorized(request: Request): boolean {
-  const founderKey = process.env.FOUNDER_KEY;
+import {
+  isFounderKeyConfigured,
+  isFounderSessionValid,
+  verifyFounderKey,
+} from "@/lib/founder-session";
 
-  if (!founderKey) {
+export function isFounderAuthorized(request: Request): boolean {
+  if (!isFounderKeyConfigured()) {
     return true;
   }
 
-  const headerKey = request.headers.get("x-founder-key");
-  return headerKey === founderKey;
+  if (isFounderSessionValid(request)) {
+    return true;
+  }
+
+  const headerKey = request.headers.get("x-founder-key") ?? "";
+  return verifyFounderKey(headerKey);
 }

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { handleApiError } from "@/lib/api-errors";
+import { notifyFounderNewChallenge } from "@/lib/email";
 import { isFounderAuthorized } from "@/lib/auth";
-import { createChallenge, getChallenges, markChallengeReviewed } from "@/lib/store";
+import { createChallenge, getChallenges, getBeliefById, markChallengeReviewed } from "@/lib/store";
 import type { CreateChallengeInput } from "@/lib/types";
 
 export async function GET(request: Request) {
@@ -29,6 +30,16 @@ export async function POST(request: Request) {
 
   try {
     const challenge = await createChallenge(body);
+    const belief = await getBeliefById(body.beliefId);
+
+    void notifyFounderNewChallenge({
+      beliefTitle: belief?.title ?? body.beliefId,
+      beliefId: body.beliefId,
+      challengerName: challenge.challengerName,
+      argument: challenge.argument,
+      evidence: challenge.evidence,
+    });
+
     return NextResponse.json({ challenge }, { status: 201 });
   } catch (error) {
     if (error instanceof Error && error.message === "Belief not found") {

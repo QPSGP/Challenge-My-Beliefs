@@ -151,6 +151,20 @@ export function SystemStatusPanel({ status, embedded = false }: SystemStatusPane
         <StatusRow label="Challenges" value={String(status.challengeCount)} />
         <StatusRow label="Belief revisions" value={String(status.revisionCount)} />
         <StatusRow label="Channel waitlist" value={String(status.waitlistCount)} />
+        <StatusRow
+          label="Email alerts"
+          value={
+            status.emailNotificationsConfigured
+              ? "Configured"
+              : "Not configured"
+          }
+          ok={status.emailNotificationsConfigured ? true : undefined}
+          hint={
+            status.emailNotificationsConfigured
+              ? "You will receive alerts for new challenges and waitlist signups."
+              : "Set RESEND_API_KEY and FOUNDER_NOTIFY_EMAIL in Vercel to enable founder email alerts."
+          }
+        />
       </div>
     </>
   );

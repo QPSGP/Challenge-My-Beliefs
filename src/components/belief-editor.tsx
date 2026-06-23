@@ -7,7 +7,7 @@ import { useState } from "react";
 import { CategoryField } from "@/components/category-field";
 import { FounderKeyBar } from "@/components/founder-key-bar";
 import { readApiError } from "@/lib/api-client";
-import { founderHeaders } from "@/lib/founder-client";
+import { founderRequestInit } from "@/lib/founder-client";
 import { outcomeLabels } from "@/lib/outcome-styles";
 import type { Belief, BeliefOutcome } from "@/lib/types";
 
@@ -45,7 +45,7 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
     try {
       const response = await fetch(`/api/beliefs/${belief.id}`, {
         method: "PUT",
-        headers: founderHeaders(founderKey),
+        ...founderRequestInit(founderKey),
         body: JSON.stringify({
           title,
           statement,
@@ -91,7 +91,7 @@ export function BeliefEditor({ belief }: BeliefEditorProps) {
     try {
       const response = await fetch(`/api/beliefs/${belief.id}`, {
         method: "DELETE",
-        headers: founderHeaders(founderKey),
+        ...founderRequestInit(founderKey),
       });
 
       if (!response.ok) {

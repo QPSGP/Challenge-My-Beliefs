@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { handleApiError } from "@/lib/api-errors";
+import { notifyFounderWaitlistSignup } from "@/lib/email";
 import { createChannelInterest } from "@/lib/store";
 import type { ChannelSlug, CreateChannelInterestInput } from "@/lib/types";
 
@@ -19,6 +20,14 @@ export async function POST(request: Request) {
     }
 
     await createChannelInterest(body);
+
+    void notifyFounderWaitlistSignup({
+      channel: body.channel,
+      email: body.email.trim(),
+      displayName: body.displayName,
+      categoryInterest: body.categoryInterest,
+      introduction: body.introduction,
+    });
 
     const message =
       body.channel === "community"
