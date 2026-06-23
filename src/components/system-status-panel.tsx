@@ -83,6 +83,18 @@ export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
         </div>
       ) : null}
 
+      {!supabase.config.hasPostgresUrl && supabase.configured ? (
+        <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-50">
+          <p className="font-semibold text-amber-100">POSTGRES_URL missing</p>
+          <p className="mt-2">
+            Supabase API keys are set, but <code className="text-amber-100">POSTGRES_URL</code> is
+            not. In Vercel, open Storage → Supabase → connect this project, then redeploy. Locally,
+            add <code className="text-amber-100">POSTGRES_URL</code> to{" "}
+            <code className="text-amber-100">.env.local</code> from Supabase → Settings → Database.
+          </p>
+        </div>
+      ) : null}
+
       {!supabase.configured && supabase.config.hasUrl && !supabase.config.hasServiceKey ? (
         <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-50">
           <p className="font-semibold text-amber-100">Supabase URL found — server key missing</p>

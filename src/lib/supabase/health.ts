@@ -1,8 +1,13 @@
 import { getSupabaseAdmin, getSupabaseServiceKey, getSupabaseUrl, isSupabaseConfigured } from "@/lib/supabase/client";
+import {
+  isPostgresDirectConfigured,
+  postgresTablesExist,
+} from "@/lib/supabase/run-schema";
 
 export type SupabaseConfigStatus = {
   hasUrl: boolean;
   hasServiceKey: boolean;
+  hasPostgresUrl: boolean;
   configured: boolean;
 };
 
@@ -17,10 +22,12 @@ export type SupabaseHealth = {
 export function getSupabaseConfigStatus(): SupabaseConfigStatus {
   const hasUrl = Boolean(getSupabaseUrl());
   const hasServiceKey = Boolean(getSupabaseServiceKey());
+  const hasPostgresUrl = isPostgresDirectConfigured();
 
   return {
     hasUrl,
     hasServiceKey,
+    hasPostgresUrl,
     configured: hasUrl && hasServiceKey,
   };
 }
@@ -30,6 +37,7 @@ function isMissingTableMessage(message: string): boolean {
   return (
     lower.includes("does not exist") ||
     lower.includes("could not find the table") ||
+    lower.includes("schema cache") ||
     lower.includes("42p01")
   );
 }
@@ -49,6 +57,20 @@ export async function checkSupabaseHealth(): Promise<SupabaseHealth> {
     };
   }
 
+  if (config.hasPostgresUrl) {
+    const tablesReady = await postgresTablesExist();
+    if (!tablesReady) {
+      return {
+        configured: true,
+        config,
+        tablesReady: false,
+        beliefCount: null,
+        error:
+          "Database tables are missing. On /admin click Setup database and load beliefs (green button).",
+      };
+    }
+  }
+
   try {
     const supabase = getSupabaseAdmin();
     const { count, error } = await supabase
@@ -62,7 +84,7 @@ export async function checkSupabaseHealth(): Promise<SupabaseHealth> {
         tablesReady: !isMissingTableMessage(error.message),
         beliefCount: null,
         error: isMissingTableMessage(error.message)
-          ? "Database tables are missing. Run supabase/schema.sql in the Supabase SQL Editor."
+          ? "Database tables are missing. On /admin click Setup database and load beliefs (green button)."
           : error.message,
       };
     }

@@ -5,7 +5,12 @@ import { isFounderAuthorized } from "@/lib/auth";
 import { readBundledBeliefsJson, writeBeliefsJson } from "@/lib/persistence";
 import { checkSupabaseHealth } from "@/lib/supabase/health";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
-import { isPostgresDirectConfigured, runDatabaseSchema } from "@/lib/supabase/run-schema";
+import {
+  isPostgresDirectConfigured,
+  postgresTablesExist,
+  runDatabaseSchema,
+  waitForSupabaseTablesReady,
+} from "@/lib/supabase/run-schema";
 import type { Belief } from "@/lib/types";
 
 export async function POST(request: Request) {
@@ -22,20 +27,34 @@ export async function POST(request: Request) {
     }
 
     let schemaResult: { statementsRun: number } | null = null;
-    const healthBefore = await checkSupabaseHealth();
+    const tablesExistBefore = isPostgresDirectConfigured()
+      ? await postgresTablesExist()
+      : false;
 
-    if (!healthBefore.tablesReady) {
+    if (!tablesExistBefore) {
       if (!isPostgresDirectConfigured()) {
         return NextResponse.json(
           {
             error:
-              "Database tables are missing and POSTGRES_URL is not available. In Vercel, confirm Supabase is attached to this project, then redeploy.",
+              "Database tables are missing and POSTGRES_URL is not available. In Vercel: Storage → Supabase → connect to this project, then redeploy. Locally: add POSTGRES_URL to .env.local (Supabase → Settings → Database → connection string).",
           },
           { status: 503 },
         );
       }
 
       schemaResult = await runDatabaseSchema();
+      const ready = await waitForSupabaseTablesReady();
+
+      if (!ready) {
+        return NextResponse.json(
+          {
+            error:
+              "Tables were created but Supabase has not refreshed yet. Wait 30 seconds and click the button again.",
+            schemaResult,
+          },
+          { status: 503 },
+        );
+      }
     }
 
     const healthAfter = await checkSupabaseHealth();
@@ -43,7 +62,9 @@ export async function POST(request: Request) {
     if (!healthAfter.tablesReady) {
       return NextResponse.json(
         {
-          error: healthAfter.error ?? "Tables still not ready after schema setup.",
+          error:
+            healthAfter.error ??
+            "Tables still not ready. Wait 30 seconds and try again, or run supabase/schema.sql in Supabase SQL Editor.",
           schemaResult,
         },
         { status: 503 },
