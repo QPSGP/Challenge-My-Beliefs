@@ -84,10 +84,16 @@ export type ChannelInterest = {
   id: string;
   channel: ChannelSlug;
   email: string;
+  displayName: string;
+  introduction: string;
+  categoryInterest: string;
   createdAt: string;
 };
 
 export type CreateChannelInterestInput = {
   channel: ChannelSlug;
   email: string;
+  displayName?: string;
+  introduction?: string;
+  categoryInterest?: string;
 };

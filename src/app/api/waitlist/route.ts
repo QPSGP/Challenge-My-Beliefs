@@ -20,9 +20,12 @@ export async function POST(request: Request) {
 
     await createChannelInterest(body);
 
-    return NextResponse.json({
-      message: "You are on the waitlist. We will notify you when this channel launches.",
-    });
+    const message =
+      body.channel === "community"
+        ? "You are on the community list. We will be in touch."
+        : "You are on the waitlist. We will notify you when this channel launches.";
+
+    return NextResponse.json({ message });
   } catch (error) {
     return handleApiError(error);
   }

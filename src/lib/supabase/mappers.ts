@@ -43,6 +43,9 @@ export type WaitlistRow = {
   id: string;
   channel: ChannelInterest["channel"];
   email: string;
+  display_name: string;
+  introduction: string;
+  category_interest: string;
   created_at: string;
 };
 
@@ -130,6 +133,9 @@ export function waitlistToRow(entry: ChannelInterest): WaitlistRow {
     id: entry.id,
     channel: entry.channel,
     email: entry.email,
+    display_name: entry.displayName,
+    introduction: entry.introduction,
+    category_interest: entry.categoryInterest,
     created_at: entry.createdAt,
   };
 }
@@ -139,6 +145,9 @@ export function rowToWaitlist(row: WaitlistRow): ChannelInterest {
     id: row.id,
     channel: row.channel,
     email: row.email,
+    displayName: row.display_name ?? "",
+    introduction: row.introduction ?? "",
+    categoryInterest: row.category_interest ?? "",
     createdAt: row.created_at,
   };
 }

@@ -38,6 +38,9 @@ create table if not exists public.channel_waitlist (
   id text primary key,
   channel text not null,
   email text not null,
+  display_name text not null default '',
+  introduction text not null default '',
+  category_interest text not null default '',
   created_at timestamptz not null default now(),
   unique (channel, email)
 );
@@ -52,6 +55,10 @@ alter table public.beliefs enable row level security;
 alter table public.challenges enable row level security;
 alter table public.belief_revisions enable row level security;
 alter table public.channel_waitlist enable row level security;
+
+alter table public.channel_waitlist add column if not exists display_name text not null default '';
+alter table public.channel_waitlist add column if not exists introduction text not null default '';
+alter table public.channel_waitlist add column if not exists category_interest text not null default '';
 
 -- Server uses the service role key (bypasses RLS). No public policies yet.
 

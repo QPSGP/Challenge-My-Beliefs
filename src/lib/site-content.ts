@@ -59,7 +59,7 @@ export const channelPages: Record<
     headline: string;
     description: string;
     detail: string;
-    status: "planned";
+    status: "planned" | "preview" | "beta";
     features: string[];
   }
 > = {
@@ -70,7 +70,7 @@ export const channelPages: Record<
     description:
       "Clips, quotes, and debate highlights that drive people back to the full belief record on the site.",
     detail: platformChannels[1].detail,
-    status: "planned",
+    status: "preview",
     features: [
       "Shareable belief cards and ruling updates",
       "Highlight the strongest public challenges",
@@ -84,7 +84,7 @@ export const channelPages: Record<
     description:
       "Conversations that unpack the hardest disagreements and show how beliefs hold up under sustained scrutiny.",
     detail: platformChannels[2].detail,
-    status: "planned",
+    status: "preview",
     features: [
       "Episode archive tied to specific beliefs",
       "Guest challengers with structured prep",
@@ -98,7 +98,7 @@ export const channelPages: Record<
     description:
       "Members gather evidence, question assumptions, and build reputation through useful challenges—not noise.",
     detail: platformChannels[3].detail,
-    status: "planned",
+    status: "beta",
     features: [
       "Reputation for evidence-backed challenges",
       "Moderation aligned with the founding rule",
@@ -119,8 +119,18 @@ export const roadmapItems = [
     status: "done" as const,
   },
   {
-    title: "Social, podcast, and community channels",
-    detail: "Amplification layers that feed participation back into the website.",
+    title: "Community channel",
+    detail: "Working groups by category, guidelines, and member signup at /community.",
+    status: "done" as const,
+  },
+  {
+    title: "Podcast and social previews",
+    detail: "Preview pages, waitlists, and share buttons on belief pages.",
+    status: "done" as const,
+  },
+  {
+    title: "Live podcast episodes and social accounts",
+    detail: "Publish episodes and connect external platforms after community beta.",
     status: "planned" as const,
   },
   {

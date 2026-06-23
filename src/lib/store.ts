@@ -248,6 +248,9 @@ export async function createChannelInterest(
     id: `waitlist-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     channel: input.channel,
     email,
+    displayName: input.displayName?.trim() ?? "",
+    introduction: input.introduction?.trim() ?? "",
+    categoryInterest: input.categoryInterest?.trim() ?? "",
     createdAt: new Date().toISOString(),
   };
 

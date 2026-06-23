@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ChannelWaitlistForm } from "@/components/channel-waitlist-form";
 import { SectionHeading } from "@/components/section-heading";
@@ -12,6 +12,19 @@ type ChannelDetailPageProps = {
 
 export default async function ChannelDetailPage({ params }: ChannelDetailPageProps) {
   const { slug } = await params;
+
+  if (slug === "community") {
+    redirect("/community");
+  }
+
+  if (slug === "podcast") {
+    redirect("/channels/podcast");
+  }
+
+  if (slug === "social") {
+    redirect("/channels/social");
+  }
+
   const channel = channelPages[slug as ChannelSlug];
 
   if (!channel) {

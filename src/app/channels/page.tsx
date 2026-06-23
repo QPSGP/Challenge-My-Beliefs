@@ -2,6 +2,25 @@ import Link from "next/link";
 
 import { SectionHeading } from "@/components/section-heading";
 import { channelPages, platformChannels } from "@/lib/site-content";
+import type { ChannelSlug } from "@/lib/types";
+
+const channelHref: Record<ChannelSlug, string> = {
+  community: "/community",
+  podcast: "/channels/podcast",
+  social: "/channels/social",
+};
+
+const statusLabel: Record<(typeof channelPages)[ChannelSlug]["status"], string> = {
+  beta: "Beta",
+  preview: "Preview",
+  planned: "Planned",
+};
+
+const statusClass: Record<(typeof channelPages)[ChannelSlug]["status"], string> = {
+  beta: "text-emerald-300",
+  preview: "text-violet-300",
+  planned: "text-slate-500",
+};
 
 export default function ChannelsPage() {
   const channels = Object.values(channelPages);
@@ -22,11 +41,13 @@ export default function ChannelsPage() {
         {channels.map((channel) => (
           <Link
             key={channel.slug}
-            href={`/channels/${channel.slug}`}
+            href={channelHref[channel.slug]}
             className="flex h-full flex-col rounded-3xl border border-slate-800 bg-slate-950/70 p-6 transition hover:border-sky-400/30"
           >
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-              Planned channel
+            <p
+              className={`text-sm font-semibold uppercase tracking-[0.18em] ${statusClass[channel.status]}`}
+            >
+              {statusLabel[channel.status]} channel
             </p>
             <h2 className="mt-2 text-2xl font-semibold text-white">{channel.name}</h2>
             <p className="mt-3 flex-1 text-sm leading-7 text-slate-400">{channel.description}</p>

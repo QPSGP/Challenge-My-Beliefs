@@ -5,16 +5,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { AddBeliefForm } from "@/components/add-belief-form";
+import { CommunityMembersPanel } from "@/components/community-members-panel";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
 import { CategoryBadge } from "@/components/category-badge";
 import { OutcomeBadge } from "@/components/outcome-badge";
 import { SupabaseSqlSetupPanel } from "@/components/supabase-sql-setup-panel";
 import { founderHeaders, getFounderKey, setFounderKey } from "@/lib/founder-client";
-import type { Belief, Challenge } from "@/lib/types";
+import type { Belief, Challenge, ChannelInterest } from "@/lib/types";
 
 type AdminDashboardProps = {
   initialBeliefs: Belief[];
   initialChallenges: Challenge[];
+  communityMembers: ChannelInterest[];
   bundledBeliefCount: number;
   supabaseConfigured: boolean;
   usingSupabase: boolean;
@@ -24,6 +26,7 @@ type AdminDashboardProps = {
 export function AdminDashboard({
   initialBeliefs,
   initialChallenges,
+  communityMembers,
   bundledBeliefCount,
   supabaseConfigured,
   usingSupabase,
@@ -225,6 +228,8 @@ export function AdminDashboard({
       ) : null}
 
       {message ? <p className="text-sm text-sky-300">{message}</p> : null}
+
+      <CommunityMembersPanel members={communityMembers} />
 
       <BeliefOrderEditor
         key={beliefOrderKey}

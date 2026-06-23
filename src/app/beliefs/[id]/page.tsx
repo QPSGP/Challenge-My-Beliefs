@@ -7,6 +7,7 @@ import { ChallengeForm } from "@/components/challenge-form";
 import { ChallengeList } from "@/components/challenge-list";
 import { FounderEditBanner } from "@/components/founder-edit-banner";
 import { OutcomeBadge } from "@/components/outcome-badge";
+import { ShareBeliefButtons } from "@/components/share-belief-buttons";
 import { getBeliefRevisions } from "@/lib/revisions";
 import { getBeliefById, getChallenges } from "@/lib/store";
 
@@ -97,6 +98,8 @@ export default async function BeliefDetailPage({ params }: BeliefDetailPageProps
       </section>
 
       <BeliefHistory revisions={revisions} />
+
+      <ShareBeliefButtons beliefId={belief.id} title={belief.title} />
 
       <div className="grid gap-10 xl:grid-cols-[1fr_1.1fr]">
         <ChallengeForm beliefId={belief.id} beliefTitle={belief.title} />

@@ -3,14 +3,15 @@ import { SectionHeading } from "@/components/section-heading";
 import { SystemStatusPanel } from "@/components/system-status-panel";
 import { getBundledBeliefCount } from "@/lib/persistence";
 import { getSystemStatus } from "@/lib/system-status";
-import { getBeliefs, getChallenges } from "@/lib/store";
+import { getBeliefs, getChallenges, getChannelInterests } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [beliefs, challenges, bundledBeliefCount, status] = await Promise.all([
+  const [beliefs, challenges, communityMembers, bundledBeliefCount, status] = await Promise.all([
     getBeliefs(),
     getChallenges(),
+    getChannelInterests("community"),
     getBundledBeliefCount(),
     getSystemStatus(),
   ]);
@@ -28,6 +29,7 @@ export default async function AdminPage() {
       <AdminDashboard
         initialBeliefs={beliefs}
         initialChallenges={challenges}
+        communityMembers={communityMembers}
         bundledBeliefCount={bundledBeliefCount}
         supabaseConfigured={status.supabase.configured}
         usingSupabase={status.persistence === "supabase" && status.supabase.tablesReady}
