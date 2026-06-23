@@ -17,7 +17,7 @@ export function BeliefCard({ belief, linkToDetail = true }: BeliefCardProps) {
           <p className="text-sm uppercase tracking-[0.22em] text-slate-400">Belief Card</p>
           <h3 className="mt-2 text-2xl font-semibold text-white">{belief.title}</h3>
           <div className="mt-3">
-            <CategoryBadge category={belief.category} linkToFilter />
+            <CategoryBadge category={belief.category} />
           </div>
         </div>
         <OutcomeBadge outcome={belief.outcome} />
