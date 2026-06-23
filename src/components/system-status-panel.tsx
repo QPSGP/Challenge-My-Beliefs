@@ -130,12 +130,16 @@ export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
         />
         <StatusRow
           label="Founder key"
-          value={status.founderKeyRequired ? "Required in production" : "Not set (open founder APIs)"}
-          ok={status.founderKeyRequired}
+          value={
+            status.founderKeyRequired
+              ? "Required — enter key below"
+              : "Not required (founder tools open)"
+          }
+          ok={status.founderKeyRequired ? undefined : true}
           hint={
             status.founderKeyRequired
-              ? "Set FOUNDER_KEY in Vercel env vars and enter the same key in this dashboard."
-              : "Optional: set FOUNDER_KEY in Vercel to lock founder routes."
+              ? "FOUNDER_KEY is set in Vercel. Enter the same value in the Founder access box below."
+              : "This is normal. Founder /admin works without a key. Set FOUNDER_KEY in Vercel only when you want to lock edit access."
           }
         />
         <StatusRow
