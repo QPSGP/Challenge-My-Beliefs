@@ -35,6 +35,19 @@ You should see success with four tables: `beliefs`, `challenges`, `belief_revisi
 
 ## Step 4 — Add environment variables
 
+### Vercel Marketplace integration
+
+If you connected Supabase through **Vercel → Storage / Integrations → Supabase**, Vercel usually sets:
+
+| Vercel injects | Used for |
+|----------------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` or `SUPABASE_URL` | Project URL |
+| `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY` | Server writes (required) |
+
+The app reads both naming conventions. **Redeploy** after connecting.
+
+You still must run [`supabase/schema.sql`](./supabase/schema.sql) once in the Supabase **SQL Editor** (tables are not created automatically).
+
 ### Local (optional)
 
 Create or edit `.env.local`:
