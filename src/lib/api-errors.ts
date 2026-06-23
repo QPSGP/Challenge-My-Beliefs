@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { PersistenceNotConfiguredError } from "@/lib/persistence";
+import { PersistenceNotConfiguredError, SupabaseSchemaNotReadyError } from "@/lib/persistence";
 
 export function handleApiError(error: unknown) {
   if (error instanceof PersistenceNotConfiguredError) {
+    return NextResponse.json({ error: error.message }, { status: 503 });
+  }
+
+  if (error instanceof SupabaseSchemaNotReadyError) {
     return NextResponse.json({ error: error.message }, { status: 503 });
   }
 

@@ -17,6 +17,7 @@ type AdminDashboardProps = {
   bundledBeliefCount: number;
   supabaseConfigured: boolean;
   usingSupabase: boolean;
+  supabaseTablesReady: boolean;
 };
 
 export function AdminDashboard({
@@ -25,6 +26,7 @@ export function AdminDashboard({
   bundledBeliefCount,
   supabaseConfigured,
   usingSupabase,
+  supabaseTablesReady,
 }: AdminDashboardProps) {
   const router = useRouter();
   const [founderKey, setFounderKeyState] = useState("");
@@ -159,7 +161,7 @@ export function AdminDashboard({
         </section>
       ) : null}
 
-      {supabaseConfigured ? (
+      {supabaseConfigured && supabaseTablesReady ? (
         <section className="rounded-3xl border border-sky-400/30 bg-sky-400/10 p-6">
           <h2 className="text-xl font-semibold text-sky-100">Import into Supabase</h2>
           <p className="mt-2 text-sm leading-6 text-sky-50/80">

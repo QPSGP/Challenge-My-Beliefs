@@ -20,20 +20,20 @@ function persistenceOk(status: SystemStatus): boolean {
     return true;
   }
 
-  return status.persistence === "supabase" || status.blobConfigured;
+  if (status.persistence === "supabase") {
+    return status.supabase.tablesReady;
+  }
+
+  return status.persistence === "vercel-blob" || status.blobConfigured;
 }
 
 function persistenceHint(status: SystemStatus): string | undefined {
-  if (status.runtime !== "vercel" || persistenceOk(status)) {
-    if (status.supabaseConfigured && status.persistence !== "supabase") {
-      return "Supabase env vars are set but not active. Redeploy after adding them.";
-    }
-
-    return undefined;
+  if (status.supabase.error && !status.supabase.tablesReady) {
+    return status.supabase.error;
   }
 
-  if (status.supabaseConfigured) {
-    return "Run the SQL schema in Supabase, redeploy, then use Migrate to Supabase in this dashboard.";
+  if (status.runtime !== "vercel" || persistenceOk(status)) {
+    return undefined;
   }
 
   return "Connect Supabase (recommended) or Vercel Blob. See SUPABASE.md or DEPLOY.md.";
@@ -64,12 +64,37 @@ function StatusRow({
 }
 
 export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
+  const supabase = status.supabase;
+
   return (
     <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6">
       <h2 className="text-xl font-semibold text-white">System status</h2>
       <p className="mt-2 text-sm leading-6 text-slate-400">
         Use this checklist to confirm production is ready for founder edits and public data.
       </p>
+
+      {!supabase.tablesReady && supabase.configured ? (
+        <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-50">
+          <p className="font-semibold text-amber-100">Supabase connected — database not ready yet</p>
+          <p className="mt-2">{supabase.error}</p>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-amber-50/90">
+            <li>Open your Supabase project → SQL Editor</li>
+            <li>Paste and run <code className="text-amber-100">supabase/schema.sql</code> from the repo</li>
+            <li>Return here and click Load benevolent society beliefs</li>
+          </ol>
+        </div>
+      ) : null}
+
+      {!supabase.configured && supabase.config.hasUrl && !supabase.config.hasServiceKey ? (
+        <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-50">
+          <p className="font-semibold text-amber-100">Supabase URL found — server key missing</p>
+          <p className="mt-2">
+            In Vercel → Settings → Environment Variables, confirm{" "}
+            <code className="text-amber-100">SUPABASE_SECRET_KEY</code> or{" "}
+            <code className="text-amber-100">SUPABASE_SERVICE_ROLE_KEY</code> is set, then redeploy.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatusRow
@@ -83,14 +108,15 @@ export function SystemStatusPanel({ status }: SystemStatusPanelProps) {
           hint={persistenceHint(status)}
         />
         <StatusRow
-          label="Supabase"
-          value={status.supabaseConfigured ? "Configured" : "Not configured"}
-          ok={status.supabaseConfigured}
-          hint={
-            status.supabaseConfigured
-              ? "Using Postgres when env vars are active on this deployment."
-              : "Optional but recommended. See SUPABASE.md."
+          label="Supabase tables"
+          value={
+            !supabase.configured
+              ? "Not configured"
+              : supabase.tablesReady
+                ? `Ready (${supabase.beliefCount ?? 0} beliefs in DB)`
+                : "Schema not run"
           }
+          ok={supabase.configured ? supabase.tablesReady : undefined}
         />
         <StatusRow
           label="Founder key"

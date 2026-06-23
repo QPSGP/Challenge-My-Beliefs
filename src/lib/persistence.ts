@@ -3,6 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { isSupabaseSchemaError } from "@/lib/supabase/health";
 import {
   supabaseReadBeliefs,
   supabaseReadChallenges,
@@ -43,6 +44,16 @@ export class PersistenceNotConfiguredError extends Error {
       "Live saves need Supabase or Vercel Blob. See SUPABASE.md or DEPLOY.md, then redeploy.",
     );
     this.name = "PersistenceNotConfiguredError";
+  }
+}
+
+export class SupabaseSchemaNotReadyError extends Error {
+  constructor(detail?: string) {
+    super(
+      detail ??
+        "Supabase tables are missing. Open Supabase → SQL Editor, run supabase/schema.sql from the repo, then try again.",
+    );
+    this.name = "SupabaseSchemaNotReadyError";
   }
 }
 
@@ -234,17 +245,50 @@ async function seedSupabaseBeliefsIfNeeded(live: Belief[]): Promise<Belief[]> {
   const bundled = await readBundledBeliefsJson<Belief[]>();
 
   if (isStaleLiveBeliefs(live, bundled)) {
-    await supabaseWriteBeliefs(bundled);
+    try {
+      await supabaseWriteBeliefs(bundled);
+    } catch (error) {
+      console.error("[persistence] Supabase seed failed:", error);
+    }
     return bundled;
   }
 
   return live;
 }
 
+async function readSupabaseBeliefsSafe(): Promise<Belief[]> {
+  try {
+    const live = await supabaseReadBeliefs();
+    return await seedSupabaseBeliefsIfNeeded(live);
+  } catch (error) {
+    console.error("[persistence] Supabase beliefs read failed, using bundled file:", error);
+    return readBundledBeliefsJson<Belief[]>();
+  }
+}
+
+async function readSupabaseJsonSafe<T>(read: () => Promise<T>, fallback: () => Promise<T>): Promise<T> {
+  try {
+    return await read();
+  } catch (error) {
+    console.error("[persistence] Supabase read failed, using fallback:", error);
+    return fallback();
+  }
+}
+
+async function writeSupabaseOrThrow(write: () => Promise<void>): Promise<void> {
+  try {
+    await write();
+  } catch (writeError) {
+    if (isSupabaseSchemaError(writeError)) {
+      throw new SupabaseSchemaNotReadyError();
+    }
+    throw writeError;
+  }
+}
+
 export async function readBeliefsJson<T>(): Promise<T> {
   if (isSupabaseConfigured()) {
-    const beliefs = await seedSupabaseBeliefsIfNeeded(await supabaseReadBeliefs());
-    return beliefs as T;
+    return (await readSupabaseBeliefsSafe()) as T;
   }
 
   const bundled = await readBundledBeliefsJson<T>();
@@ -274,7 +318,7 @@ export async function readBeliefsJson<T>(): Promise<T> {
 
 export async function writeBeliefsJson<T>(data: T): Promise<void> {
   if (isSupabaseConfigured()) {
-    await supabaseWriteBeliefs(data as Belief[]);
+    await writeSupabaseOrThrow(() => supabaseWriteBeliefs(data as Belief[]));
     return;
   }
 
@@ -288,7 +332,10 @@ export async function writeBeliefsJson<T>(data: T): Promise<void> {
 
 export async function readChallengesJson<T>(): Promise<T> {
   if (isSupabaseConfigured()) {
-    return (await supabaseReadChallenges()) as T;
+    return readSupabaseJsonSafe(
+      () => supabaseReadChallenges() as Promise<T>,
+      () => readLocalJsonOrEmpty<Challenge[]>(challengesPath, []) as Promise<T>,
+    );
   }
 
   if (hasBlobStorage()) {
@@ -300,7 +347,7 @@ export async function readChallengesJson<T>(): Promise<T> {
 
 export async function writeChallengesJson<T>(data: T): Promise<void> {
   if (isSupabaseConfigured()) {
-    await supabaseWriteChallenges(data as Challenge[]);
+    await writeSupabaseOrThrow(() => supabaseWriteChallenges(data as Challenge[]));
     return;
   }
 
@@ -314,7 +361,10 @@ export async function writeChallengesJson<T>(data: T): Promise<void> {
 
 export async function readRevisionsJson<T>(): Promise<T> {
   if (isSupabaseConfigured()) {
-    return (await supabaseReadRevisions()) as T;
+    return readSupabaseJsonSafe(
+      () => supabaseReadRevisions() as Promise<T>,
+      () => readLocalJsonOrEmpty<BeliefRevision[]>(revisionsPath, []) as Promise<T>,
+    );
   }
 
   if (hasBlobStorage()) {
@@ -326,7 +376,7 @@ export async function readRevisionsJson<T>(): Promise<T> {
 
 export async function writeRevisionsJson<T>(data: T): Promise<void> {
   if (isSupabaseConfigured()) {
-    await supabaseWriteRevisions(data as BeliefRevision[]);
+    await writeSupabaseOrThrow(() => supabaseWriteRevisions(data as BeliefRevision[]));
     return;
   }
 
@@ -340,7 +390,10 @@ export async function writeRevisionsJson<T>(data: T): Promise<void> {
 
 export async function readWaitlistJson<T>(): Promise<T> {
   if (isSupabaseConfigured()) {
-    return (await supabaseReadWaitlist()) as T;
+    return readSupabaseJsonSafe(
+      () => supabaseReadWaitlist() as Promise<T>,
+      () => readLocalJsonOrEmpty<ChannelInterest[]>(waitlistPath, []) as Promise<T>,
+    );
   }
 
   if (hasBlobStorage()) {
@@ -352,7 +405,7 @@ export async function readWaitlistJson<T>(): Promise<T> {
 
 export async function writeWaitlistJson<T>(data: T): Promise<void> {
   if (isSupabaseConfigured()) {
-    await supabaseWriteWaitlist(data as ChannelInterest[]);
+    await writeSupabaseOrThrow(() => supabaseWriteWaitlist(data as ChannelInterest[]));
     return;
   }
 
