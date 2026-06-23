@@ -6,12 +6,15 @@ type CategoryCardProps = {
   category: string;
   count: number;
   preview: string;
+  href?: string;
 };
 
-export function CategoryCard({ category, count, preview }: CategoryCardProps) {
+export function CategoryCard({ category, count, preview, href }: CategoryCardProps) {
+  const destination = href ?? `/categories/${categoryToSlug(category)}`;
+
   return (
     <Link
-      href={`/categories/${categoryToSlug(category)}`}
+      href={destination}
       className="flex h-full flex-col rounded-3xl border border-slate-800 bg-slate-950/70 p-6 transition hover:border-sky-400/30 hover:bg-slate-950"
     >
       <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">

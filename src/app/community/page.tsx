@@ -82,13 +82,13 @@ export default async function CommunityPage() {
         />
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {categoryGroups.map((group) => (
-            <Link key={group.category} href={`/community/groups/${categoryToSlug(group.category)}`}>
-              <CategoryCard
-                category={group.category}
-                count={group.beliefs.length}
-                preview={group.beliefs[0]?.statement ?? ""}
-              />
-            </Link>
+            <CategoryCard
+              key={group.category}
+              category={group.category}
+              count={group.beliefs.length}
+              preview={group.beliefs[0]?.statement ?? ""}
+              href={`/community/groups/${categoryToSlug(group.category)}`}
+            />
           ))}
         </div>
       </section>
