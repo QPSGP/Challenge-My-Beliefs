@@ -210,6 +210,24 @@ export function AdminDashboard({
     router.refresh();
   }
 
+  async function sendTestEmail() {
+    setMessage("Sending test email…");
+
+    const response = await fetch("/api/admin/test-email", {
+      method: "POST",
+      ...founderRequestInit(founderKey),
+    });
+
+    const data = (await response.json()) as { error?: string; message?: string };
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Test email failed.");
+      return;
+    }
+
+    setMessage(data.message ?? "Test email sent.");
+  }
+
   return (
     <div className="space-y-4">
       {message ? (
@@ -403,10 +421,27 @@ export function AdminDashboard({
             label="Export social"
           />
         </div>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => void sendTestEmail()}
+            className="rounded-full border border-sky-400/40 bg-sky-400/15 px-5 py-2 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
+          >
+            Send test email
+          </button>
+          <p
+            className={`text-sm ${systemStatus.emailNotificationsConfigured ? "text-emerald-300" : "text-amber-300"}`}
+          >
+            {systemStatus.emailNotificationsConfigured
+              ? "Email alerts configured."
+              : "Email alerts not configured yet."}
+          </p>
+        </div>
         <p className="mt-4 text-sm leading-6 text-slate-400">
-          Email alerts send when someone submits a challenge or joins a waitlist. Add{" "}
+          Use the same Resend account as your other project. Add{" "}
           <code className="text-sky-200">RESEND_API_KEY</code> and{" "}
-          <code className="text-sky-200">FOUNDER_NOTIFY_EMAIL</code> in Vercel, then redeploy.
+          <code className="text-sky-200">FOUNDER_NOTIFY_EMAIL</code> in Vercel (or run{" "}
+          <code className="text-sky-200">scripts/setup-email.ps1</code> locally), then redeploy.
         </p>
       </AdminAccordionSection>
 

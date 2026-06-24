@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "sync": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/git-sync.ps1"
+    "sync": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/git-sync.ps1",
+    "setup:email": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-email.ps1"
   },
   "keywords": [
     "beliefs",
