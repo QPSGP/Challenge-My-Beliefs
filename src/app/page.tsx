@@ -81,16 +81,24 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="rule" className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-        <SectionHeading
-          eyebrow="Founding Rule"
-          title="Truth, context, and honesty set the standard."
-          description="The platform should not reward noise. It should show what the belief was, what the evidence says, what context matters, and why the ruling stayed or changed."
-        />
+      <section id="rule" className="space-y-6">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <SectionHeading
+            eyebrow="Founding Rule"
+            title="Truth, context, and honesty set the standard."
+            description="The platform should not reward noise. It should show what the belief was, what the evidence says, what context matters, and why the ruling stayed or changed."
+          />
 
-        <div className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-8 text-lg leading-8 text-slate-100 shadow-[0_18px_70px_rgba(14,165,233,0.12)]">
-          {foundingRule}
+          <div className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-8 text-lg leading-8 text-slate-100 shadow-[0_18px_70px_rgba(14,165,233,0.12)]">
+            {foundingRule}
+          </div>
         </div>
+        <Link
+          href="/definitions"
+          className="inline-block text-sm font-semibold text-sky-300 hover:text-sky-200"
+        >
+          Definitions of key words →
+        </Link>
       </section>
 
       <section id="categories" className="space-y-10">

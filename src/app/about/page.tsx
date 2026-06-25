@@ -50,6 +50,12 @@ export default function AboutPage() {
             incorrect.
           </li>
         </ul>
+        <Link
+          href="/definitions"
+          className="mt-6 inline-block text-sm font-semibold text-sky-300 hover:text-sky-200"
+        >
+          Full glossary of key terms →
+        </Link>
       </section>
 
       <div className="flex flex-wrap gap-3">
@@ -58,6 +64,12 @@ export default function AboutPage() {
           className="rounded-full border border-sky-400/40 bg-sky-400/15 px-6 py-3 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
         >
           View beliefs
+        </Link>
+        <Link
+          href="/definitions"
+          className="rounded-full border border-slate-700 px-6 py-3 text-sm text-slate-200 hover:border-sky-400/40"
+        >
+          Definitions
         </Link>
         <Link
           href="/"

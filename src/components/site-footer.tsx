@@ -6,6 +6,7 @@ const links = [
   { href: "/categories", label: "Categories" },
   { href: "/community", label: "Community" },
   { href: "/channels", label: "Channels" },
+  { href: "/definitions", label: "Definitions" },
   { href: "/about", label: "About" },
   { href: "/admin", label: "Founder" },
 ] as const;
