@@ -2,6 +2,7 @@ import { get, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
+import { buildSeedDefinitionsDocument } from "@/lib/glossary-seed";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { isSupabaseSchemaError } from "@/lib/supabase/health";
 import {
@@ -156,7 +157,7 @@ async function writeLocalJson<T>(filePath: string, data: T): Promise<void> {
   await fs.writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
-async function readBlobJson<T>(pathname: string, localFallbackPath: string): Promise<T> {
+async function readBlobJson<T>(pathname: string, localFallbackPath: string, fallback: T): Promise<T> {
   try {
     const result = await get(pathname, { access: BLOB_ACCESS });
 
@@ -167,7 +168,7 @@ async function readBlobJson<T>(pathname: string, localFallbackPath: string): Pro
     const text = await new Response(result.stream).text();
     return JSON.parse(text) as T;
   } catch {
-    return readLocalJsonOrEmpty<T>(localFallbackPath, [] as T);
+    return readLocalJsonOrEmpty<T>(localFallbackPath, fallback);
   }
 }
 
@@ -207,7 +208,7 @@ async function readLegacyBeliefsJson(): Promise<Belief[]> {
 
 async function readLegacyChallengesJson(): Promise<Challenge[]> {
   if (hasBlobStorage()) {
-    return readBlobJson<Challenge[]>(BLOB_CHALLENGES, challengesPath);
+    return readBlobJson<Challenge[]>(BLOB_CHALLENGES, challengesPath, []);
   }
 
   return readLocalJsonOrEmpty<Challenge[]>(challengesPath, []);
@@ -215,7 +216,7 @@ async function readLegacyChallengesJson(): Promise<Challenge[]> {
 
 async function readLegacyRevisionsJson(): Promise<BeliefRevision[]> {
   if (hasBlobStorage()) {
-    return readBlobJson<BeliefRevision[]>(BLOB_REVISIONS, revisionsPath);
+    return readBlobJson<BeliefRevision[]>(BLOB_REVISIONS, revisionsPath, []);
   }
 
   return readLocalJsonOrEmpty<BeliefRevision[]>(revisionsPath, []);
@@ -223,17 +224,17 @@ async function readLegacyRevisionsJson(): Promise<BeliefRevision[]> {
 
 async function readLegacyWaitlistJson(): Promise<ChannelInterest[]> {
   if (hasBlobStorage()) {
-    return readBlobJson<ChannelInterest[]>(BLOB_WAITLIST, waitlistPath);
+    return readBlobJson<ChannelInterest[]>(BLOB_WAITLIST, waitlistPath, []);
   }
 
   return readLocalJsonOrEmpty<ChannelInterest[]>(waitlistPath, []);
 }
 
 async function readLegacyDefinitionsJson(): Promise<DefinitionsDocument> {
-  const fallback: DefinitionsDocument = { intro: "", entries: [] };
+  const fallback = buildSeedDefinitionsDocument();
 
   if (hasBlobStorage()) {
-    return readBlobJson<DefinitionsDocument>(BLOB_DEFINITIONS, definitionsPath);
+    return readBlobJson<DefinitionsDocument>(BLOB_DEFINITIONS, definitionsPath, fallback);
   }
 
   return readLocalJsonOrEmpty<DefinitionsDocument>(definitionsPath, fallback);
@@ -356,7 +357,7 @@ export async function readChallengesJson<T>(): Promise<T> {
   }
 
   if (hasBlobStorage()) {
-    return readBlobJson<T>(BLOB_CHALLENGES, challengesPath);
+    return readBlobJson<T>(BLOB_CHALLENGES, challengesPath, [] as T);
   }
 
   return readLocalJsonOrEmpty<T>(challengesPath, [] as T);
@@ -385,7 +386,7 @@ export async function readRevisionsJson<T>(): Promise<T> {
   }
 
   if (hasBlobStorage()) {
-    return readBlobJson<T>(BLOB_REVISIONS, revisionsPath);
+    return readBlobJson<T>(BLOB_REVISIONS, revisionsPath, [] as T);
   }
 
   return readLocalJsonOrEmpty<T>(revisionsPath, [] as T);
@@ -414,7 +415,7 @@ export async function readWaitlistJson<T>(): Promise<T> {
   }
 
   if (hasBlobStorage()) {
-    return readBlobJson<T>(BLOB_WAITLIST, waitlistPath);
+    return readBlobJson<T>(BLOB_WAITLIST, waitlistPath, [] as T);
   }
 
   return readLocalJsonOrEmpty<T>(waitlistPath, [] as T);
@@ -435,25 +436,20 @@ export async function writeWaitlistJson<T>(data: T): Promise<void> {
 }
 
 export async function readDefinitionsJson<T>(): Promise<T> {
+  const seedFallback = buildSeedDefinitionsDocument();
+
   if (isSupabaseConfigured()) {
     return readSupabaseJsonSafe(
       () => supabaseReadDefinitionsDocument() as Promise<T>,
-      () =>
-        readLocalJsonOrEmpty<DefinitionsDocument>(definitionsPath, {
-          intro: "",
-          entries: [],
-        }) as Promise<T>,
+      () => Promise.resolve(seedFallback) as Promise<T>,
     );
   }
 
   if (hasBlobStorage()) {
-    return readBlobJson<T>(BLOB_DEFINITIONS, definitionsPath);
+    return readBlobJson<T>(BLOB_DEFINITIONS, definitionsPath, seedFallback as T);
   }
 
-  return readLocalJsonOrEmpty<T>(definitionsPath, {
-    intro: "",
-    entries: [],
-  } as T);
+  return readLocalJsonOrEmpty<T>(definitionsPath, seedFallback as T);
 }
 
 export async function writeDefinitionsJson<T>(data: T): Promise<void> {

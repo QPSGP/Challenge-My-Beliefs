@@ -305,7 +305,11 @@ export async function getDefinitionsDocument(): Promise<DefinitionsDocument> {
 
   if (document.entries.length === 0) {
     const seed = buildSeedDefinitionsDocument();
-    await writeDefinitionsJson(seed);
+    try {
+      await writeDefinitionsJson(seed);
+    } catch (error) {
+      console.error("[store] Could not persist seed definitions:", error);
+    }
     return seed;
   }
 
