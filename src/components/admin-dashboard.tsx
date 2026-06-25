@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { AddBeliefForm } from "@/components/add-belief-form";
 import { AdminAccordionSection } from "@/components/admin-accordion-section";
+import { DefinitionsEditor } from "@/components/definitions-editor";
 import { BeliefOrderEditor } from "@/components/belief-order-editor";
 import { CategoryBadge } from "@/components/category-badge";
 import { ChannelWaitlistPanel } from "@/components/channel-waitlist-panel";
@@ -15,7 +16,7 @@ import { SystemStatusPanel } from "@/components/system-status-panel";
 import { WaitlistExportButton } from "@/components/waitlist-export-button";
 import { founderRequestInit, getFounderKey, setFounderKey } from "@/lib/founder-client";
 import type { SystemStatus } from "@/lib/system-status";
-import type { Belief, Challenge, ChannelInterest } from "@/lib/types";
+import type { Belief, Challenge, ChannelInterest, DefinitionsDocument } from "@/lib/types";
 
 type AdminDashboardProps = {
   initialBeliefs: Belief[];
@@ -23,6 +24,7 @@ type AdminDashboardProps = {
   communityMembers: ChannelInterest[];
   podcastWaitlist: ChannelInterest[];
   socialWaitlist: ChannelInterest[];
+  definitionsDocument: DefinitionsDocument;
   bundledBeliefCount: number;
   supabaseConfigured: boolean;
   usingSupabase: boolean;
@@ -36,6 +38,7 @@ export function AdminDashboard({
   communityMembers,
   podcastWaitlist,
   socialWaitlist,
+  definitionsDocument,
   bundledBeliefCount,
   supabaseConfigured,
   usingSupabase,
@@ -122,7 +125,13 @@ export function AdminDashboard({
     const data = (await response.json()) as {
       error?: string;
       message?: string;
-      counts?: { beliefs: number; challenges: number; revisions: number; waitlist: number };
+      counts?: {
+        beliefs: number;
+        challenges: number;
+        revisions: number;
+        waitlist: number;
+        definitions: number;
+      };
     };
 
     if (!response.ok) {
@@ -133,7 +142,7 @@ export function AdminDashboard({
     const counts = data.counts;
     setMessage(
       counts
-        ? `${data.message ?? "Migration complete."} Beliefs: ${counts.beliefs}, challenges: ${counts.challenges}, revisions: ${counts.revisions}, waitlist: ${counts.waitlist}.`
+        ? `${data.message ?? "Migration complete."} Beliefs: ${counts.beliefs}, challenges: ${counts.challenges}, revisions: ${counts.revisions}, waitlist: ${counts.waitlist}, definitions: ${counts.definitions}.`
         : (data.message ?? "Migration complete."),
     );
     router.refresh();
@@ -503,6 +512,27 @@ export function AdminDashboard({
           embedded
           emptyMessage="No social waitlist signups yet."
         />
+      </AdminAccordionSection>
+
+      <AdminAccordionSection
+        id="definitions"
+        title="Definitions glossary"
+        description="Add and edit plain-language definitions shown on /definitions."
+        badge={String(definitionsDocument.entries.length)}
+        isOpen={openSection === "definitions"}
+        onToggle={toggleSection}
+        tone="violet"
+      >
+        <DefinitionsEditor
+          initialDocument={definitionsDocument}
+          founderKey={founderKey}
+          onMessage={setMessage}
+        />
+        <p className="mt-6 text-sm leading-6 text-slate-400">
+          On production with Supabase, run the latest SQL in the admin panel once so glossary
+          tables exist. Locally, definitions save to{" "}
+          <code className="text-sky-200">data/definitions.json</code>.
+        </p>
       </AdminAccordionSection>
 
       <AdminAccordionSection

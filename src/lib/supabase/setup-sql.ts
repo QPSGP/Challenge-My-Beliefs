@@ -61,5 +61,28 @@ alter table public.channel_waitlist add column if not exists display_name text n
 alter table public.channel_waitlist add column if not exists introduction text not null default '';
 alter table public.channel_waitlist add column if not exists category_interest text not null default '';
 
+create table if not exists public.glossary_meta (
+  id text primary key,
+  intro text not null default ''
+);
+
+create table if not exists public.glossary_entries (
+  id text primary key,
+  section_title text not null,
+  section_description text not null default '',
+  term text not null,
+  definition text not null,
+  example text not null default '',
+  sort_order integer not null default 0,
+  updated_at timestamptz not null default now()
+);
+
+insert into public.glossary_meta (id, intro) values ('default', '') on conflict (id) do nothing;
+
+create index if not exists glossary_entries_sort_order_idx on public.glossary_entries (sort_order);
+
+alter table public.glossary_meta enable row level security;
+alter table public.glossary_entries enable row level security;
+
 notify pgrst, 'reload schema';
 `;

@@ -1,15 +1,21 @@
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/section-heading";
-import { definitionSections, definitionsIntro } from "@/lib/definitions-content";
+import { groupDefinitionsDocument } from "@/lib/glossary-seed";
+import { getDefinitionsDocument } from "@/lib/store";
 
-export default function DefinitionsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DefinitionsPage() {
+  const document = await getDefinitionsDocument();
+  const definitionSections = groupDefinitionsDocument(document);
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-14 px-6 py-10 sm:px-10 lg:px-12">
       <SectionHeading
         eyebrow="Definitions"
         title="Key words, in plain language"
-        description={definitionsIntro}
+        description={document.intro}
       />
 
       <div className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6 text-base leading-7 text-slate-200">
@@ -34,7 +40,7 @@ export default function DefinitionsPage() {
           <dl className="grid gap-4 sm:grid-cols-2">
             {section.entries.map((entry) => (
               <div
-                key={entry.term}
+                key={`${section.title}-${entry.term}`}
                 className="rounded-3xl border border-slate-800 bg-slate-950/70 p-6"
               >
                 <dt className="text-lg font-semibold text-white">{entry.term}</dt>

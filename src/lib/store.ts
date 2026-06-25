@@ -3,11 +3,14 @@ import { slugify } from "@/lib/slug";
 import {
   readBeliefsJson,
   readChallengesJson,
+  readDefinitionsJson,
   readWaitlistJson,
   writeBeliefsJson,
   writeChallengesJson,
+  writeDefinitionsJson,
   writeWaitlistJson,
 } from "@/lib/persistence";
+import { buildSeedDefinitionsDocument } from "@/lib/glossary-seed";
 import { recordBeliefRevision, revisionKindForUpdate } from "@/lib/revisions";
 import type {
   Belief,
@@ -16,9 +19,13 @@ import type {
   CreateBeliefInput,
   CreateChallengeInput,
   CreateChannelInterestInput,
+  CreateGlossaryEntryInput,
+  DefinitionsDocument,
   EditBeliefContentInput,
+  GlossaryEntry,
   UpdateBeliefInput,
   UpdateBeliefRulingInput,
+  UpdateGlossaryEntryInput,
 } from "@/lib/types";
 
 function normalizeBelief(belief: Belief): Belief {
@@ -284,4 +291,121 @@ export async function markChallengeReviewed(id: string): Promise<Challenge | und
 
   await writeChallengesJson(challenges);
   return challenges[index];
+}
+
+function normalizeDefinitionsDocument(document: DefinitionsDocument): DefinitionsDocument {
+  return {
+    intro: document.intro?.trim() ?? "",
+    entries: Array.isArray(document.entries) ? document.entries : [],
+  };
+}
+
+export async function getDefinitionsDocument(): Promise<DefinitionsDocument> {
+  const document = normalizeDefinitionsDocument(await readDefinitionsJson<DefinitionsDocument>());
+
+  if (document.entries.length === 0) {
+    const seed = buildSeedDefinitionsDocument();
+    await writeDefinitionsJson(seed);
+    return seed;
+  }
+
+  return document;
+}
+
+export async function updateDefinitionsIntro(intro: string): Promise<DefinitionsDocument> {
+  const document = await getDefinitionsDocument();
+  const next = { ...document, intro: intro.trim() };
+  await writeDefinitionsJson(next);
+  return next;
+}
+
+async function uniqueGlossaryId(sectionTitle: string, term: string, existingIds: Set<string>): Promise<string> {
+  const base = slugify(`${sectionTitle}-${term}`);
+  let id = base;
+  let suffix = 2;
+
+  while (existingIds.has(id)) {
+    id = `${base}-${suffix}`;
+    suffix += 1;
+  }
+
+  return id;
+}
+
+export async function createGlossaryEntry(input: CreateGlossaryEntryInput): Promise<GlossaryEntry> {
+  if (!input.term?.trim() || !input.definition?.trim() || !input.sectionTitle?.trim()) {
+    throw new Error("Section, term, and definition are required");
+  }
+
+  const document = await getDefinitionsDocument();
+  const id = await uniqueGlossaryId(
+    input.sectionTitle,
+    input.term,
+    new Set(document.entries.map((entry) => entry.id)),
+  );
+
+  const entry: GlossaryEntry = {
+    id,
+    sectionTitle: input.sectionTitle.trim(),
+    sectionDescription: input.sectionDescription.trim(),
+    term: input.term.trim(),
+    definition: input.definition.trim(),
+    example: input.example?.trim() ?? "",
+    sortOrder: document.entries.length,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await writeDefinitionsJson({
+    ...document,
+    entries: [...document.entries, entry],
+  });
+
+  return entry;
+}
+
+export async function updateGlossaryEntry(
+  id: string,
+  input: UpdateGlossaryEntryInput,
+): Promise<GlossaryEntry | undefined> {
+  const document = await getDefinitionsDocument();
+  const index = document.entries.findIndex((entry) => entry.id === id);
+
+  if (index === -1) {
+    return undefined;
+  }
+
+  const current = document.entries[index];
+  const nextEntry: GlossaryEntry = {
+    ...current,
+    sectionTitle: input.sectionTitle?.trim() || current.sectionTitle,
+    sectionDescription: input.sectionDescription?.trim() ?? current.sectionDescription,
+    term: input.term?.trim() || current.term,
+    definition: input.definition?.trim() || current.definition,
+    example: input.example !== undefined ? input.example.trim() : current.example,
+    sortOrder: input.sortOrder ?? current.sortOrder,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const entries = [...document.entries];
+  entries[index] = nextEntry;
+  await writeDefinitionsJson({ ...document, entries });
+  return nextEntry;
+}
+
+export async function deleteGlossaryEntry(id: string): Promise<boolean> {
+  const document = await getDefinitionsDocument();
+  const entries = document.entries.filter((entry) => entry.id !== id);
+
+  if (entries.length === document.entries.length) {
+    return false;
+  }
+
+  await writeDefinitionsJson({ ...document, entries });
+  return true;
+}
+
+export async function resetDefinitionsToSeed(): Promise<DefinitionsDocument> {
+  const seed = buildSeedDefinitionsDocument();
+  await writeDefinitionsJson(seed);
+  return seed;
 }

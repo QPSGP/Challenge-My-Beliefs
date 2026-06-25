@@ -97,3 +97,36 @@ export type CreateChannelInterestInput = {
   introduction?: string;
   categoryInterest?: string;
 };
+
+export type GlossaryEntry = {
+  id: string;
+  sectionTitle: string;
+  sectionDescription: string;
+  term: string;
+  definition: string;
+  example: string;
+  sortOrder: number;
+  updatedAt: string;
+};
+
+export type DefinitionsDocument = {
+  intro: string;
+  entries: GlossaryEntry[];
+};
+
+export type CreateGlossaryEntryInput = {
+  sectionTitle: string;
+  sectionDescription: string;
+  term: string;
+  definition: string;
+  example?: string;
+};
+
+export type UpdateGlossaryEntryInput = {
+  sectionTitle?: string;
+  sectionDescription?: string;
+  term?: string;
+  definition?: string;
+  example?: string;
+  sortOrder?: number;
+};

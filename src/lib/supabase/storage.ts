@@ -2,9 +2,11 @@ import { getSupabaseAdmin } from "@/lib/supabase/client";
 import {
   beliefToRow,
   challengeToRow,
+  glossaryEntryToRow,
   revisionToRow,
   rowToBelief,
   rowToChallenge,
+  rowToGlossaryEntry,
   rowToRevision,
   rowToWaitlist,
   waitlistToRow,
@@ -15,6 +17,7 @@ import type {
   BeliefRevision,
   Challenge,
   ChannelInterest,
+  DefinitionsDocument,
 } from "@/lib/types";
 
 function throwOnError(error: { message: string } | null): void {
@@ -23,7 +26,10 @@ function throwOnError(error: { message: string } | null): void {
   }
 }
 
-async function deleteMissingIds(table: "beliefs" | "challenges" | "belief_revisions" | "channel_waitlist", keepIds: string[]): Promise<void> {
+async function deleteMissingIds(
+  table: "beliefs" | "challenges" | "belief_revisions" | "channel_waitlist" | "glossary_entries",
+  keepIds: string[],
+): Promise<void> {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase.from(table).select("id");
 
@@ -133,6 +139,50 @@ export async function supabaseWriteWaitlist(entries: ChannelInterest[]): Promise
   await deleteMissingIds("channel_waitlist", entries.map((entry) => entry.id));
 }
 
+export async function supabaseReadDefinitionsDocument(): Promise<DefinitionsDocument> {
+  const supabase = getSupabaseAdmin();
+  const [{ data: meta, error: metaError }, { data: entries, error: entriesError }] =
+    await Promise.all([
+      supabase.from("glossary_meta").select("intro").eq("id", "default").maybeSingle(),
+      supabase
+        .from("glossary_entries")
+        .select("*")
+        .order("sort_order", { ascending: true }),
+    ]);
+
+  throwOnError(metaError);
+  throwOnError(entriesError);
+
+  return {
+    intro: (meta as { intro?: string } | null)?.intro ?? "",
+    entries: (entries ?? []).map((row) => rowToGlossaryEntry(row as never)),
+  };
+}
+
+export async function supabaseWriteDefinitionsDocument(
+  document: DefinitionsDocument,
+): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const { error: metaError } = await supabase.from("glossary_meta").upsert({
+    id: "default",
+    intro: document.intro,
+  });
+
+  throwOnError(metaError);
+
+  const rows = document.entries.map(glossaryEntryToRow);
+
+  if (rows.length > 0) {
+    const { error } = await supabase.from("glossary_entries").upsert(rows);
+    throwOnError(error);
+  }
+
+  await deleteMissingIds(
+    "glossary_entries",
+    document.entries.map((entry) => entry.id),
+  );
+}
+
 export async function supabaseInsertWaitlistEntry(entry: ChannelInterest): Promise<void> {
   const supabase = getSupabaseAdmin();
   const { error } = await supabase.from("channel_waitlist").insert(waitlistToRow(entry));
@@ -149,6 +199,7 @@ export type SupabaseImportCounts = {
   challenges: number;
   revisions: number;
   waitlist: number;
+  definitions: number;
 };
 
 export async function supabaseImportAll(input: {
@@ -156,16 +207,19 @@ export async function supabaseImportAll(input: {
   challenges: Challenge[];
   revisions: BeliefRevision[];
   waitlist: ChannelInterest[];
+  definitions: DefinitionsDocument;
 }): Promise<SupabaseImportCounts> {
   await supabaseWriteBeliefs(input.beliefs);
   await supabaseWriteChallenges(input.challenges);
   await supabaseWriteRevisions(input.revisions);
   await supabaseWriteWaitlist(input.waitlist);
+  await supabaseWriteDefinitionsDocument(input.definitions);
 
   return {
     beliefs: input.beliefs.length,
     challenges: input.challenges.length,
     revisions: input.revisions.length,
     waitlist: input.waitlist.length,
+    definitions: input.definitions.entries.length,
   };
 }

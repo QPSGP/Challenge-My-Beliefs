@@ -9,27 +9,32 @@ import {
   supabaseReadChallenges,
   supabaseReadRevisions,
   supabaseReadWaitlist,
+  supabaseReadDefinitionsDocument,
   supabaseWriteBeliefs,
   supabaseWriteChallenges,
   supabaseWriteRevisions,
   supabaseWriteWaitlist,
+  supabaseWriteDefinitionsDocument,
 } from "@/lib/supabase/storage";
 import type {
   Belief,
   BeliefRevision,
   Challenge,
   ChannelInterest,
+  DefinitionsDocument,
 } from "@/lib/types";
 
 const beliefsPath = path.join(process.cwd(), "data", "beliefs.json");
 const challengesPath = path.join(process.cwd(), "data", "challenges.json");
 const revisionsPath = path.join(process.cwd(), "data", "belief-revisions.json");
 const waitlistPath = path.join(process.cwd(), "data", "waitlist.json");
+const definitionsPath = path.join(process.cwd(), "data", "definitions.json");
 
 const BLOB_BELIEFS = "cmb/beliefs.json";
 const BLOB_CHALLENGES = "cmb/challenges.json";
 const BLOB_REVISIONS = "cmb/belief-revisions.json";
 const BLOB_WAITLIST = "cmb/waitlist.json";
+const BLOB_DEFINITIONS = "cmb/definitions.json";
 const BLOB_ACCESS = "private" as const;
 
 /** IDs from the bundled benevolent-society seed; missing from live storage => stale data. */
@@ -224,21 +229,33 @@ async function readLegacyWaitlistJson(): Promise<ChannelInterest[]> {
   return readLocalJsonOrEmpty<ChannelInterest[]>(waitlistPath, []);
 }
 
+async function readLegacyDefinitionsJson(): Promise<DefinitionsDocument> {
+  const fallback: DefinitionsDocument = { intro: "", entries: [] };
+
+  if (hasBlobStorage()) {
+    return readBlobJson<DefinitionsDocument>(BLOB_DEFINITIONS, definitionsPath);
+  }
+
+  return readLocalJsonOrEmpty<DefinitionsDocument>(definitionsPath, fallback);
+}
+
 /** Import source data from JSON/Blob (skips Supabase). Used when migrating to Supabase. */
 export async function readLegacyStorageSnapshot(): Promise<{
   beliefs: Belief[];
   challenges: Challenge[];
   revisions: BeliefRevision[];
   waitlist: ChannelInterest[];
+  definitions: DefinitionsDocument;
 }> {
-  const [beliefs, challenges, revisions, waitlist] = await Promise.all([
+  const [beliefs, challenges, revisions, waitlist, definitions] = await Promise.all([
     readLegacyBeliefsJson(),
     readLegacyChallengesJson(),
     readLegacyRevisionsJson(),
     readLegacyWaitlistJson(),
+    readLegacyDefinitionsJson(),
   ]);
 
-  return { beliefs, challenges, revisions, waitlist };
+  return { beliefs, challenges, revisions, waitlist, definitions };
 }
 
 async function seedSupabaseBeliefsIfNeeded(live: Belief[]): Promise<Belief[]> {
@@ -415,4 +432,42 @@ export async function writeWaitlistJson<T>(data: T): Promise<void> {
   }
 
   await writeLocalJson(waitlistPath, data);
+}
+
+export async function readDefinitionsJson<T>(): Promise<T> {
+  if (isSupabaseConfigured()) {
+    return readSupabaseJsonSafe(
+      () => supabaseReadDefinitionsDocument() as Promise<T>,
+      () =>
+        readLocalJsonOrEmpty<DefinitionsDocument>(definitionsPath, {
+          intro: "",
+          entries: [],
+        }) as Promise<T>,
+    );
+  }
+
+  if (hasBlobStorage()) {
+    return readBlobJson<T>(BLOB_DEFINITIONS, definitionsPath);
+  }
+
+  return readLocalJsonOrEmpty<T>(definitionsPath, {
+    intro: "",
+    entries: [],
+  } as T);
+}
+
+export async function writeDefinitionsJson<T>(data: T): Promise<void> {
+  if (isSupabaseConfigured()) {
+    await writeSupabaseOrThrow(() =>
+      supabaseWriteDefinitionsDocument(data as DefinitionsDocument),
+    );
+    return;
+  }
+
+  if (hasBlobStorage()) {
+    await writeBlobJson(BLOB_DEFINITIONS, data);
+    return;
+  }
+
+  await writeLocalJson(definitionsPath, data);
 }

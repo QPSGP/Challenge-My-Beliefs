@@ -3,6 +3,7 @@ import type {
   BeliefRevision,
   Challenge,
   ChannelInterest,
+  GlossaryEntry,
 } from "@/lib/types";
 
 export type BeliefRow = {
@@ -149,5 +150,47 @@ export function rowToWaitlist(row: WaitlistRow): ChannelInterest {
     introduction: row.introduction ?? "",
     categoryInterest: row.category_interest ?? "",
     createdAt: row.created_at,
+  };
+}
+
+export type GlossaryMetaRow = {
+  id: string;
+  intro: string;
+};
+
+export type GlossaryEntryRow = {
+  id: string;
+  section_title: string;
+  section_description: string;
+  term: string;
+  definition: string;
+  example: string;
+  sort_order: number;
+  updated_at: string;
+};
+
+export function glossaryEntryToRow(entry: GlossaryEntry): GlossaryEntryRow {
+  return {
+    id: entry.id,
+    section_title: entry.sectionTitle,
+    section_description: entry.sectionDescription,
+    term: entry.term,
+    definition: entry.definition,
+    example: entry.example,
+    sort_order: entry.sortOrder,
+    updated_at: entry.updatedAt,
+  };
+}
+
+export function rowToGlossaryEntry(row: GlossaryEntryRow): GlossaryEntry {
+  return {
+    id: row.id,
+    sectionTitle: row.section_title,
+    sectionDescription: row.section_description,
+    example: row.example ?? "",
+    term: row.term,
+    definition: row.definition,
+    sortOrder: row.sort_order,
+    updatedAt: row.updated_at,
   };
 }
