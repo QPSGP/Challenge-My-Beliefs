@@ -245,39 +245,54 @@ export function AdminDashboard({
         </p>
       ) : null}
 
-      <AdminAccordionSection
-        id="system-status"
-        title="System status"
-        description="Confirm production is ready for founder edits and public data."
-        isOpen={openSection === "system-status"}
-        onToggle={toggleSection}
-      >
-        <SystemStatusPanel status={systemStatus} embedded />
-      </AdminAccordionSection>
+      <div className="rounded-2xl border border-slate-700 bg-slate-900/60 px-5 py-4 text-sm leading-6 text-slate-300">
+        <p className="font-semibold text-white">How this page works</p>
+        <p className="mt-1">
+          Each block below is a section. Click the title or the{" "}
+          <strong className="text-sky-200">▼ Click to open</strong> button on the right to expand
+          it and see buttons, forms, and SQL.
+        </p>
+      </div>
 
-      <AdminAccordionSection
-        id="founder-access"
-        title="Founder access"
-        description="Sign in with your founder key for a 7-day session, or save the key in this browser."
-        isOpen={openSection === "founder-access"}
-        onToggle={toggleSection}
-      >
-        <div className="space-y-4">
-          {sessionSignedIn === null ? (
-            <p className="text-sm text-slate-400">Checking sign-in status…</p>
-          ) : (
-            <p
-              className={`text-sm font-medium ${sessionSignedIn ? "text-emerald-300" : "text-amber-300"}`}
-            >
-              {sessionSignedIn
-                ? "Signed in — founder actions use your secure session."
-                : systemStatus.founderKeyRequired
-                  ? "Not signed in — enter your founder key below."
-                  : "Founder key not required in this environment."}
-            </p>
-          )}
-
-          <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="rounded-2xl border border-slate-800 bg-slate-950/70 px-5 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-white">Founder access</p>
+            {sessionSignedIn === null ? (
+              <p className="mt-1 text-sm text-slate-400">Checking status…</p>
+            ) : (
+              <p
+                className={`mt-1 text-sm font-medium ${sessionSignedIn ? "text-emerald-300" : "text-amber-300"}`}
+              >
+                {sessionSignedIn
+                  ? systemStatus.founderKeyRequired
+                    ? "Signed in — founder edits are enabled for 7 days."
+                    : "No founder password on this site — admin tools are open."
+                  : "Not signed in — enter your founder key below if edits fail."}
+              </p>
+            )}
+          </div>
+          {systemStatus.founderKeyRequired ? (
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => void signInWithSession()}
+                className="rounded-full border border-emerald-400/40 bg-emerald-400/15 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-400/25"
+              >
+                Sign in
+              </button>
+              <button
+                type="button"
+                onClick={() => void signOutSession()}
+                className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-200 hover:border-sky-400/40"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : null}
+        </div>
+        {systemStatus.founderKeyRequired ? (
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
               className="flex-1 rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-slate-100 outline-none focus:ring-2 focus:ring-sky-400/40"
               value={founderKey}
@@ -302,41 +317,38 @@ export function AdminDashboard({
               Save key
             </button>
           </div>
+        ) : null}
+      </div>
 
-          {systemStatus.founderKeyRequired ? (
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => void signInWithSession()}
-                className="rounded-full border border-emerald-400/40 bg-emerald-400/15 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-emerald-400/25"
-              >
-                Sign in (7 days)
-              </button>
-              <button
-                type="button"
-                onClick={() => void signOutSession()}
-                className="rounded-full border border-slate-700 px-5 py-3 text-sm text-slate-200 hover:border-sky-400/40"
-              >
-                Sign out
-              </button>
-            </div>
-          ) : null}
-        </div>
+      <AdminAccordionSection
+        id="system-status"
+        title="System status"
+        description="Confirm production is ready for founder edits and public data."
+        isOpen={openSection === "system-status"}
+        onToggle={toggleSection}
+      >
+        <SystemStatusPanel status={systemStatus} embedded />
       </AdminAccordionSection>
+
+      {supabaseConfigured ? (
+        <AdminAccordionSection
+          id="supabase-sql"
+          title="Database SQL (Supabase)"
+          description={
+            supabaseTablesReady
+              ? "Copy SQL into Supabase when adding new tables (for example glossary definitions)."
+              : "Copy SQL into Supabase if the one-click setup button is not available."
+          }
+          isOpen={openSection === "supabase-sql"}
+          onToggle={toggleSection}
+          tone="amber"
+        >
+          <SupabaseSqlSetupPanel embedded />
+        </AdminAccordionSection>
+      ) : null}
 
       {supabaseConfigured && !supabaseTablesReady ? (
         <>
-          <AdminAccordionSection
-            id="supabase-sql"
-            title="Create tables in Supabase"
-            description="Copy SQL into Supabase if the one-click setup button is not available."
-            isOpen={openSection === "supabase-sql"}
-            onToggle={toggleSection}
-            tone="amber"
-          >
-            <SupabaseSqlSetupPanel embedded />
-          </AdminAccordionSection>
-
           <AdminAccordionSection
             id="setup-database"
             title="Setup database and load beliefs"
@@ -528,11 +540,25 @@ export function AdminDashboard({
           founderKey={founderKey}
           onMessage={setMessage}
         />
-        <p className="mt-6 text-sm leading-6 text-slate-400">
-          On production with Supabase, run the latest SQL in the admin panel once so glossary
-          tables exist. Locally, definitions save to{" "}
-          <code className="text-sky-200">data/definitions.json</code>.
-        </p>
+        {supabaseConfigured ? (
+          <div className="mt-8 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-5">
+            <p className="text-sm font-semibold text-amber-100">
+              First time saving definitions on production?
+            </p>
+            <p className="mt-2 text-sm leading-6 text-amber-50/80">
+              Run this shorter SQL in Supabase once to create the glossary tables. Safe even if
+              your other tables already exist.
+            </p>
+            <div className="mt-4">
+              <SupabaseSqlSetupPanel embedded variant="glossary" />
+            </div>
+          </div>
+        ) : (
+          <p className="mt-6 text-sm leading-6 text-slate-400">
+            Locally, definitions save to <code className="text-sky-200">data/definitions.json</code>
+            .
+          </p>
+        )}
       </AdminAccordionSection>
 
       <AdminAccordionSection

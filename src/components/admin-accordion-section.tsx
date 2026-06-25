@@ -103,7 +103,7 @@ export function AdminAccordionSection({
           }`}
           aria-hidden
         >
-          {isOpen ? "Close" : "Open"}
+          {isOpen ? "▲ Close" : "▼ Click to open"}
         </span>
       </button>
 
