@@ -163,4 +163,68 @@ export const definitionSections: DefinitionSection[] = [
       },
     ],
   },
+  {
+    title: "Values and Neo-Tech",
+    description:
+      "Key terms from the founder's value framework — achievement, capitalism, individualism, and fully integrated honesty.",
+    entries: [
+      {
+        term: "Achievement",
+        definition:
+          "The essence of human living. The source of genuine self-esteem and long-range happiness. A human necessity and prime source of pleasure. The fountainhead of all positive human values. The building block of civilization. The source of objective good.",
+      },
+      {
+        term: "Business",
+        definition:
+          "The competitive development, production, and marketing of values that benefit others.",
+      },
+      {
+        term: "Capitalism",
+        definition:
+          "Laissez-faire capitalism is the only political system that does not use or depend on initiatory force. Based entirely on justice and mutually agreed-upon exchange of values. The only system consistent with human nature and well-being. Permits maximum growth of each individual and provides maximum benefits for all. The only political system where all people are free to live in peace with justice, happiness, good will, and brotherhood. The only political system where individual rights are held supreme — thus rendering impotent the forces of altruism, injustice, favoritism, racism, and bigotry. Aspects of capitalism have been used pragmatically in Western political systems, but laissez-faire capitalism has never been the philosophical basis of any political system in history.",
+      },
+      {
+        term: "Collective",
+        definition: "Formed by or constituting a collection.",
+      },
+      {
+        term: "Collectivism",
+        definition:
+          "The theory and practice of collective ownership of land and the means of production.",
+      },
+      {
+        term: "Conscious",
+        definition: "Awake and aware of one's surroundings and identity.",
+      },
+      {
+        term: "Consciousness",
+        definition: "The state of being conscious.",
+      },
+      {
+        term: "Happiness",
+        definition:
+          "A pervasive psychological state that reflects the extent to which a person knows that he is living in accordance with his nature and dealing effectively with objective reality. The prime goal and end purpose of human life is happiness, which is earned by making objectively correct choices to satisfy one's material and psychological needs.",
+      },
+      {
+        term: "Individualism",
+        definition:
+          "A rational, self-oriented stance that is the basis of objective morality and a prerequisite for human nature to function properly and effectively. Individualism is the stance required for production of maximum values for self and for all others — for freedom, romantic love, and long-range happiness.",
+      },
+      {
+        term: "Laissez faire",
+        definition:
+          "Translated literally, “to let do” or “to let the people do as they choose.” The only social system that is philosophically and consistently pro-individualism, pro-freedom, anti-force, and anti-government oppression. The only social system that fully acknowledges and respects the individual's inalienable rights to life and property — where not only the best interests of the individual can be fulfilled, but where the best interests of a rational society can also be fulfilled. A social system where no one can profit from racism, parasitism, or initiatory force.",
+      },
+      {
+        term: "Mysticism",
+        definition:
+          "1. Any mental or physical attempt to recreate, evade, or alter reality through dishonesty, rationalization, non sequiturs, emotions, deceptions, or force. 2. Any attempt to use the mind to create reality rather than to identify and integrate reality.",
+      },
+      {
+        term: "Neo-Tech",
+        definition:
+          "Fully integrated honesty. A collection of new techniques and technology that lets one know exactly what is happening and what to do for gaining honest advantages in all situations. With Neo-Tech, all effort is directed toward achieving fully integrated honesty needed to act in concert with reality.",
+      },
+    ],
+  },
 ];
