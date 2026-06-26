@@ -36,6 +36,41 @@ export function buildSeedDefinitionsDocument(): DefinitionsDocument {
   };
 }
 
+/** Add default glossary terms that exist in code but not yet in storage. */
+export function mergeMissingSeedEntries(document: DefinitionsDocument): {
+  document: DefinitionsDocument;
+  addedCount: number;
+} {
+  const seed = buildSeedDefinitionsDocument();
+  const existingIds = new Set(document.entries.map((entry) => entry.id));
+  const missing = seed.entries.filter((entry) => !existingIds.has(entry.id));
+
+  if (missing.length === 0) {
+    return { document, addedCount: 0 };
+  }
+
+  const nextEntries = [
+    ...document.entries,
+    ...missing.map((entry, index) => ({
+      ...entry,
+      sortOrder: document.entries.length + index,
+      updatedAt: new Date().toISOString(),
+    })),
+  ];
+
+  return {
+    document: {
+      intro: document.intro.trim() ? document.intro : seed.intro,
+      entries: nextEntries,
+    },
+    addedCount: missing.length,
+  };
+}
+
+export function getSeedDefinitionCount(): number {
+  return buildSeedDefinitionsDocument().entries.length;
+}
+
 export function groupDefinitionsDocument(document: DefinitionsDocument): DefinitionSection[] {
   const sections = new Map<string, DefinitionSection>();
   const sorted = [...document.entries].sort((left, right) => left.sortOrder - right.sortOrder);

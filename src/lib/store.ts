@@ -10,7 +10,7 @@ import {
   writeDefinitionsJson,
   writeWaitlistJson,
 } from "@/lib/persistence";
-import { buildSeedDefinitionsDocument } from "@/lib/glossary-seed";
+import { buildSeedDefinitionsDocument, mergeMissingSeedEntries } from "@/lib/glossary-seed";
 import { recordBeliefRevision, revisionKindForUpdate } from "@/lib/revisions";
 import type {
   Belief,
@@ -311,6 +311,17 @@ export async function getDefinitionsDocument(): Promise<DefinitionsDocument> {
       console.error("[store] Could not persist seed definitions:", error);
     }
     return seed;
+  }
+
+  const { document: merged, addedCount } = mergeMissingSeedEntries(document);
+
+  if (addedCount > 0) {
+    try {
+      await writeDefinitionsJson(merged);
+    } catch (error) {
+      console.error("[store] Could not persist merged seed definitions:", error);
+    }
+    return merged;
   }
 
   return document;

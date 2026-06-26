@@ -540,6 +540,12 @@ export function AdminDashboard({
           founderKey={founderKey}
           onMessage={setMessage}
         />
+        <p className="mt-6 text-sm leading-6 text-slate-400">
+          New default terms from code are added automatically when you load this page or visit{" "}
+          <code className="text-sky-200">/definitions</code>. Use{" "}
+          <strong className="text-slate-300">Restore default glossary</strong> only if you want to
+          replace everything with a fresh copy (this removes custom terms you added).
+        </p>
         {supabaseConfigured ? (
           <div className="mt-8 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-5">
             <p className="text-sm font-semibold text-amber-100">
@@ -554,7 +560,7 @@ export function AdminDashboard({
             </div>
           </div>
         ) : (
-          <p className="mt-6 text-sm leading-6 text-slate-400">
+          <p className="mt-4 text-sm leading-6 text-slate-400">
             Locally, definitions save to <code className="text-sky-200">data/definitions.json</code>
             .
           </p>
