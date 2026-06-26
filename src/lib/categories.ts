@@ -9,6 +9,7 @@ export const SUGGESTED_CATEGORIES = [
   "Economics",
   "Faith & Meaning",
   "Science & Evidence",
+  "Founder's Creed",
   DEFAULT_CATEGORY,
 ] as const;
 

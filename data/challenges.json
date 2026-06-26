@@ -1,1 +1,90 @@
-[]
+[
+  {
+    "id": "challenge-founder-supreme-own-life-1",
+    "beliefId": "founder-supreme-own-life",
+    "challengerName": "Community ethics reviewer",
+    "argument": "Putting one's own life and happiness 'supreme' sounds like permission for selfishness. In emergencies — pandemics, war, famine — individuals routinely must accept real sacrifice for strangers. A founder who refuses to rank collective survival above personal happiness may be morally admirable in theory but destructive in crisis.",
+    "evidence": "Historical crisis response (wartime rationing, mandatory vaccination during deadly outbreaks, conscription when invasion threatens) assumes collective claims can override individual preference. Societies that absolutize individual happiness often struggle to coordinate sacrifice when coordination is genuinely required.",
+    "context": "The belief does not define 'supreme' precisely — whether it means lexically first in all cases, or first among moral equals with rare exceptions. Without that boundary, challengers can reasonably ask whether the founder would reject any compulsory sacrifice at all, even to prevent mass death.",
+    "sources": "Public health ethics literature on mandatory measures; just-war and conscription debates",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:05:00.000Z"
+  },
+  {
+    "id": "challenge-founder-no-initiatory-force-1",
+    "beliefId": "founder-no-initiatory-force",
+    "challengerName": "Policy analyst",
+    "argument": "Taxation to fund courts, police, and national defense looks like initiatory force to the taxpayer who would not pay voluntarily. If all taxation is 'initiatory force,' then the belief collapses into anarchism or requires ad hoc exceptions that undermine 'no exceptions.'",
+    "evidence": "Minarchist and classical-liberal thinkers have long debated whether limited tax-funded government is compatible with non-aggression. Empirical modern states fund essential institutions through compulsory revenue. Pure voluntary funding models exist only at small scale.",
+    "context": "The Universal Constitution attached to this worldview prohibits initiatory force with no exceptions. The challenger asks whether the founder classifies all taxation as aggression, and if not, what principled line separates permissible from impermissible coercion.",
+    "sources": "Nozick, *Anarchy, State, and Utopia*; debates on minarchism vs anarcho-capitalism",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:06:00.000Z"
+  },
+  {
+    "id": "challenge-founder-biological-morality-1",
+    "beliefId": "founder-biological-morality",
+    "challengerName": "Philosophy student",
+    "argument": "Organismic benefit is ambiguous. Lying to save a life harms cognitive integrity but may benefit biological survival. Some virtues (promise-keeping when costly) appear moral yet reduce short-term organismic comfort. Reducing morality to biology may fail to capture loyalty, beauty, or duty.",
+    "evidence": "Kant's critique of consequentialism; cases where honesty increases stress hormones short-term but builds reputation long-term; cultural practices (fasting, celibacy, risk for art) that people call moral despite organismic cost.",
+    "context": "The belief says anything not about organism benefit/harm 'is not a moral issue' — which would classify many traditional moral disputes as non-moral. The challenger tests whether the founder can handle edge cases without smuggling in non-biological values.",
+    "sources": "Intro ethics readers on deontology vs naturalism",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:07:00.000Z"
+  },
+  {
+    "id": "challenge-founder-honesty-oath-1",
+    "beliefId": "founder-honesty-oath",
+    "challengerName": "Trial attorney",
+    "argument": "Contextual honesty oaths may be unworkable in adversarial court. Each side would litigate what context is 'required,' exploding trials. The current truth oath, for all its flaws, at least draws a bright line: false statements of fact are sanctionable.",
+    "evidence": "Perjury rules and jury instructions are built around factual falsity, not omitted context. Expanding obligation to 'full relevant context' would burden witnesses and invite retrospective punishment for normal selective memory.",
+    "context": "The founder's broader platform emphasizes contextual honesty over selective facts. The challenger asks for a implementable legal standard — not only a philosophical preference.",
+    "sources": "Federal Rules of Evidence; perjury statutes (factual falsehood standard)",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:08:00.000Z"
+  },
+  {
+    "id": "challenge-founder-laisse-faire-1",
+    "beliefId": "founder-laisse-faire-producer",
+    "challengerName": "Economics commentator",
+    "argument": "Unregulated markets produce externalities — pollution, monopolies, asymmetric information — that voluntary exchange alone does not fix. 'Laissez-faire' without strong property-rights enforcement and pollution law can destroy value for third parties who never consented.",
+    "evidence": "Market failure literature (public goods, externalities); historical antitrust actions; climate costs imposed on non-participants to transactions.",
+    "context": "The belief equates laissez-faire capitalism with producing values for others. The challenger separates 'free exchange among consenting parties' from 'no rules at all,' asking whether the founder supports enforceable remedies when exchange harms non-consenting parties.",
+    "sources": "Standard microeconomics texts on externalities; Coase theorem debates",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:09:00.000Z"
+  },
+  {
+    "id": "challenge-founder-teach-self-reliance-1",
+    "beliefId": "founder-teach-self-reliance",
+    "challengerName": "Social worker",
+    "argument": "Telling people in structural poverty to 'help themselves' can blame victims for barriers they did not create — discrimination, disability, collapsed local economies. Sometimes direct material aid is the moral response, not a lesson plan.",
+    "evidence": "Studies on intergenerational poverty traps; disability access costs; communities without capital or infrastructure where self-help rhetoric failed without investment.",
+    "context": "The belief says 'usually' the best help is teaching self-reliance — not always. The challenger tests whether the founder's public stance still functions as a dismissive slogan in policy debates despite the qualifier.",
+    "sources": "Poverty research; critiques of 'bootstrap' narratives",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:10:00.000Z"
+  },
+  {
+    "id": "challenge-founder-law-stops-injustice-1",
+    "beliefId": "founder-law-stops-injustice",
+    "challengerName": "Civil rights advocate",
+    "argument": "Some injustices persist because they are legal — segregation laws, coverture, licensed monopolies. 'Stopping injustice' required positive law: civil rights acts, anti-discrimination statutes, labor protections. A law that only reacts to private injustice may leave systemic injustice untouched.",
+    "evidence": "US Civil Rights Act 1964; abolition of legal slavery required constitutional amendment and enforcement legislation, not merely courts stopping private fraud.",
+    "context": "The founder distinguishes stopping injustice from 'creating justice.' The challenger argues that prohibiting active harm and affirmatively dismantling legalized harm blur together in practice.",
+    "sources": "US civil rights history; legal realist critiques",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:11:00.000Z"
+  },
+  {
+    "id": "challenge-founder-self-responsibility-1",
+    "beliefId": "founder-self-responsibility",
+    "challengerName": "Mental health advocate",
+    "argument": "Full self-responsibility for happiness can stigmatize depression, trauma, and clinical illness as moral failures. People cannot always 'choose' prosperity when biochemistry or abuse has impaired agency.",
+    "evidence": "Clinical depression correlates with reduced executive function; trauma literature on learned helplessness; suicide prevention guidance emphasizing that willpower alone is insufficient.",
+    "context": "The belief frames responsibility as stance within one's sphere of action — not denial of hardship. The challenger asks whether public emphasis on self-responsibility still harms vulnerable listeners who hear blame instead of nuance.",
+    "sources": "APA materials on depression; trauma-informed care frameworks",
+    "status": "pending",
+    "createdAt": "2026-06-26T12:12:00.000Z"
+  }
+]

@@ -34,6 +34,20 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="rounded-3xl border border-violet-400/20 bg-violet-400/10 p-8">
+        <h2 className="text-2xl font-semibold text-violet-100">About the founder</h2>
+        <p className="mt-4 text-base leading-7 text-slate-200">
+          The founder&apos;s stated purpose in life, personal commitments, affidavit of agreement,
+          and the beliefs published here as testable claims — open to structured public challenge.
+        </p>
+        <Link
+          href="/about/founder"
+          className="mt-6 inline-block rounded-full border border-violet-400/40 bg-violet-400/15 px-6 py-3 text-sm font-semibold text-violet-100 hover:bg-violet-400/25"
+        >
+          Read purpose & affidavit →
+        </Link>
+      </section>
+
       <section className="rounded-3xl border border-slate-800 bg-slate-950/70 p-8">
         <h2 className="text-2xl font-semibold text-white">Outcomes</h2>
         <ul className="mt-4 space-y-3 text-base leading-7 text-slate-300">
@@ -70,6 +84,12 @@ export default function AboutPage() {
           className="rounded-full border border-slate-700 px-6 py-3 text-sm text-slate-200 hover:border-sky-400/40"
         >
           Definitions
+        </Link>
+        <Link
+          href="/about/founder"
+          className="rounded-full border border-slate-700 px-6 py-3 text-sm text-slate-200 hover:border-sky-400/40"
+        >
+          About the founder
         </Link>
         <Link
           href="/"

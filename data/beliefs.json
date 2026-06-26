@@ -448,5 +448,185 @@
     "outcome": "unchanged",
     "rulingNote": "",
     "updatedAt": "2026-05-27T22:45:00.000Z"
+  },
+  {
+    "id": "founder-purpose-prosperity",
+    "title": "Prosperity and happiness are life's purpose",
+    "statement": "I believe the purpose of human life is to prosper and live happily — and that a good society protects the conditions under which each individual can pursue that purpose without initiatory force or coercion.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "People consistently act to improve their own welfare when free to choose.",
+      "Societies that protect individual choice and property tend to produce greater prosperity than those built on extraction and control."
+    ],
+    "disproof": "Show that human flourishing is better served when individuals are routinely prevented from pursuing their own prosperity and happiness by initiatory force.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-supreme-own-life",
+    "title": "My life and happiness come first — morally",
+    "statement": "I believe I hold supreme the value of my own life and happiness, and that no cause is higher than the life and happiness of the individual. When individual life and property rights are protected, the rights of all people are protected.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Moral claims that sacrifice identifiable individuals for abstract collective ends have produced mass harm throughout history.",
+      "Rights language only coheres when it begins with the inviolable individual, not the group average."
+    ],
+    "disproof": "Show that societies which subordinate individual life and happiness to collective aims reliably produce more prosperity, trust, and moral integrity than those which protect the individual first.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-no-initiatory-force",
+    "title": "No initiatory force, fraud, or coercion",
+    "statement": "I believe no individual, group, or government may initiate force, threat of force, or fraud against any person or their property — and that force is justified only in defense against those who violate that rule, with no exceptions.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Initiatory force externalizes cost onto unwilling victims and destroys the basis for voluntary cooperation.",
+      "Defensive force answers aggression without licensing perpetual preemption."
+    ],
+    "disproof": "Show that routine initiatory force by governments or majorities produces more freedom, prosperity, and honest dealing than a strict non-aggression principle with defense only.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-laissez-faire-producer",
+    "title": "Produce values as a laissez-faire capitalist",
+    "statement": "I believe I am a laissez-faire capitalist by producing values for others — that real prosperity comes from creating more than I consume, through voluntary exchange, not through political extraction.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Voluntary production and trade have lifted living standards wherever property and contract are respected.",
+      "Value creation aligns self-interest with the welfare of others when exchange is honest and uncoerced."
+    ],
+    "disproof": "Show that societies which penalize production and reward political redistribution outperform market-based value creation on prosperity and individual dignity.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-mind-identifies-reality",
+    "title": "The mind identifies reality; it does not create it",
+    "statement": "I believe the mind does not create objective reality but is an objective-reality-identifying organ — and that integrated thinking requires aligning action with what is real, not with wish or mysticism.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Actions based on fantasy or evasion fail when reality contradicts them.",
+      "Integrated thinking — connecting observations, principles, and consequences — improves decisions over isolated slogans."
+    ],
+    "disproof": "Show that treating the mind as creator rather than discoverer of reality produces better long-term outcomes in science, commerce, and personal life.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-teach-self-reliance",
+    "title": "Teach people to help themselves",
+    "statement": "I believe the best way to help someone is usually to teach them to help themselves — not to foster permanent dependency that erodes dignity and competence.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Skills and habits of self-support outlast one-time aid.",
+      "Dependency without path to competence breeds resentment on both sides."
+    ],
+    "disproof": "Show that long-term one-way assistance without teaching self-reliance produces more competent, grateful, and prosperous people than empowerment toward independence.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-honesty-oath",
+    "title": "Replace the truth oath with contextual honesty",
+    "statement": "I believe the legal system should replace the truth oath with a contextual honesty oath — because raw factual statements stripped of context can mislead as effectively as lies.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Selective truth-telling is a common tool of deception in law, politics, and commerce.",
+      "Contextual honesty requires full relevant disclosure, not technically true fragments."
+    ],
+    "disproof": "Show that the traditional truth oath produces more accurate justice and less manipulation in court than an oath requiring contextual honesty.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-biological-morality",
+    "title": "Morality tracks benefit and harm to the human organism",
+    "statement": "I believe all things good for the human organism and its biological needs are morally correct, all things bad for the organism are morally incorrect, and anything else is not a moral issue.",
+    "category": "Founder's Creed",
+    "confidence": "Medium",
+    "evidence": [
+      "Moral confusion often comes from treating taste, tradition, or taboo as moral law.",
+      "Grounding morality in life and harm clarifies what is actually at stake in ethical disputes."
+    ],
+    "disproof": "Show a coherent moral framework that ignores organismic benefit and harm yet produces clearer, more benevolent guidance for how people should treat one another.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-rational-choice-chain",
+    "title": "Rational choice links reality, prosperity, and love",
+    "statement": "I believe rational, free choice is the prerequisite for integrating reality with human nature — which is the prerequisite for prosperity and happiness, and in turn for romantic love.",
+    "category": "Founder's Creed",
+    "confidence": "Medium",
+    "evidence": [
+      "Coerced 'choices' do not integrate values with reality because the chooser is not free to reject error.",
+      "Deep relationships require persons who can think, choose, and take responsibility for their lives."
+    ],
+    "disproof": "Show that removing rational free choice from major life domains improves individual prosperity, happiness, and capacity for genuine romantic partnership.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-self-responsibility",
+    "title": "I am responsible for my prosperity and happiness",
+    "statement": "I believe I am responsible for my prosperity, happiness, success, and romantic love — not as a denial of hardship, but as the stance required to use my mind, act on reality, and refuse victimhood as an identity.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Agency is the precondition for improvement; abdication of responsibility forecloses learning.",
+      "External barriers exist, but permanent surrender of responsibility guarantees permanent stagnation."
+    ],
+    "disproof": "Show that individuals who treat themselves as powerless victims of circumstance reliably achieve more prosperity and happiness than those who take responsibility within their sphere of action.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-law-stops-injustice",
+    "title": "Law stops injustice; it does not create justice",
+    "statement": "I believe law exists to stop injustice — not to create justice by force. When law tries to manufacture outcomes, it often produces new injustice in the name of good intentions.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Justice as an outcome emerges from voluntary exchange, restitution, and consistent rules — not from decree alone.",
+      "Legislated 'social justice' schemes frequently violate innocents while failing to deliver promised equity."
+    ],
+    "disproof": "Show that laws designed to create positive justice by force consistently outperform limited laws that only prohibit injustice.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
+  },
+  {
+    "id": "founder-produce-more-than-consume",
+    "title": "Produce more value than you consume",
+    "statement": "I believe I should produce more values than I consume — that net production is both a moral commitment and the practical basis of prosperity for myself and others.",
+    "category": "Founder's Creed",
+    "confidence": "High",
+    "evidence": [
+      "Chronic consumption without production depletes what others have built.",
+      "Wealth and welfare grow when individuals specialize, produce, and trade surplus."
+    ],
+    "disproof": "Show that societies thrive more when most members consume persistently more than they produce than when net production is the norm.",
+    "outcome": "unchanged",
+    "rulingNote": "",
+    "updatedAt": "2026-06-26T12:00:00.000Z"
   }
 ]

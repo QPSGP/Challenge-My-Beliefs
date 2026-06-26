@@ -8,6 +8,7 @@ const links = [
   { href: "/channels", label: "Channels" },
   { href: "/definitions", label: "Definitions" },
   { href: "/about", label: "About" },
+  { href: "/about/founder", label: "Founder story" },
   { href: "/admin", label: "Founder" },
 ] as const;
 
