@@ -1,5 +1,14 @@
 export type BeliefOutcome = "unchanged" | "refined" | "changed";
 
+export type BeliefResourceKind = "study" | "data" | "book" | "article" | "reference";
+
+export type BeliefResource = {
+  title: string;
+  url: string;
+  note: string;
+  kind: BeliefResourceKind;
+};
+
 export type Belief = {
   id: string;
   title: string;
@@ -11,6 +20,7 @@ export type Belief = {
   outcome: BeliefOutcome;
   rulingNote: string;
   updatedAt: string;
+  resources?: BeliefResource[];
 };
 
 export type ChallengeStatus = "pending" | "reviewed";

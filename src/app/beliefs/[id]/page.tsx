@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BeliefHistory } from "@/components/belief-history";
+import { BeliefResourcesList } from "@/components/belief-resources-list";
 import { CategoryBadge } from "@/components/category-badge";
 import { ChallengeForm } from "@/components/challenge-form";
 import { ChallengeList } from "@/components/challenge-list";
@@ -82,6 +83,20 @@ export default async function BeliefDetailPage({ params }: BeliefDetailPageProps
               ))}
             </dd>
           </div>
+
+          {belief.resources && belief.resources.length > 0 ? (
+            <div className="lg:col-span-2">
+              <dt className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-200/80">
+                Supporting resources
+              </dt>
+              <dd className="mt-3 text-sm text-slate-400">
+                Studies, data, books, and references that help express and test this belief.
+              </dd>
+              <dd className="mt-4">
+                <BeliefResourcesList resources={belief.resources} />
+              </dd>
+            </div>
+          ) : null}
 
           {belief.rulingNote ? (
             <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-5 lg:col-span-2">

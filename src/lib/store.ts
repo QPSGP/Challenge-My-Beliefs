@@ -1,4 +1,5 @@
 import { normalizeCategory } from "@/lib/categories";
+import { getResourcesForBelief, getSupplementalEvidence } from "@/lib/belief-resources";
 import { slugify } from "@/lib/slug";
 import {
   readBeliefsJson,
@@ -29,9 +30,13 @@ import type {
 } from "@/lib/types";
 
 function normalizeBelief(belief: Belief): Belief {
+  const supplemental = getSupplementalEvidence(belief.id);
+
   return {
     ...belief,
     category: normalizeCategory(belief.category),
+    evidence: supplemental.length > 0 ? [...belief.evidence, ...supplemental] : belief.evidence,
+    resources: getResourcesForBelief(belief.id),
   };
 }
 

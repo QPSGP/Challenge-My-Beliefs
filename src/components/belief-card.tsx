@@ -59,7 +59,13 @@ export function BeliefCard({ belief, linkToDetail = true }: BeliefCardProps) {
       </dl>
 
       {linkToDetail ? (
-        <p className="mt-6 text-sm font-medium text-sky-300">View belief and submit a challenge →</p>
+        <p className="mt-6 text-sm font-medium text-sky-300">
+          View belief and submit a challenge
+          {belief.resources && belief.resources.length > 0
+            ? ` · ${belief.resources.length} resources`
+            : ""}{" "}
+          →
+        </p>
       ) : null}
     </article>
   );
