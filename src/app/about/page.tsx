@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/section-heading";
 import { foundingRule, processSteps } from "@/lib/site-content";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "How Challenge My Beliefs works: state a belief, define disproof, invite structured challenges, and record a public ruling.",
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   return (

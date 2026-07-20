@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/section-heading";
@@ -14,6 +15,13 @@ import { foundingRule } from "@/lib/site-content";
 import { getBeliefs } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "About the founder",
+  description:
+    "The founder’s purpose, Universal Constitution, affidavit of contextual honesty, and Founder’s Creed beliefs under public challenge.",
+  alternates: { canonical: "/about/founder" },
+};
 
 export default async function AboutFounderPage() {
   const beliefs = await getBeliefs();

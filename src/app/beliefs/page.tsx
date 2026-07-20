@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { BeliefCard } from "@/components/belief-card";
 import { BeliefCategoryNav } from "@/components/belief-category-nav";
 import { SectionHeading } from "@/components/section-heading";
@@ -11,6 +13,13 @@ import { foundingRule } from "@/lib/site-content";
 import { getBeliefs } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Beliefs",
+  description:
+    "Browse every public belief on Challenge My Beliefs — statements, evidence, disproof standards, and challenge threads.",
+  alternates: { canonical: "/beliefs" },
+};
 
 type BeliefsPageProps = {
   searchParams: Promise<{ category?: string }>;

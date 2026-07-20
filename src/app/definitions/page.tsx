@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/section-heading";
@@ -5,6 +6,13 @@ import { groupDefinitionsDocument } from "@/lib/glossary-seed";
 import { getDefinitionsDocument } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Definitions",
+  description:
+    "Plain-language glossary for Challenge My Beliefs — belief, evidence, contextual honesty, capitalism, Neo-Tech, and more.",
+  alternates: { canonical: "/definitions" },
+};
 
 export default async function DefinitionsPage() {
   const document = await getDefinitionsDocument();

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -17,6 +18,41 @@ export const dynamic = "force-dynamic";
 type BeliefDetailPageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: BeliefDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const belief = await getBeliefById(id);
+
+  if (!belief) {
+    return { title: "Belief not found" };
+  }
+
+  const description =
+    belief.statement.length > 155
+      ? `${belief.statement.slice(0, 152)}…`
+      : belief.statement;
+
+  return {
+    title: belief.title,
+    description,
+    openGraph: {
+      title: `${belief.title} | Challenge My Beliefs`,
+      description,
+      type: "article",
+      url: `/beliefs/${belief.id}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: belief.title,
+      description,
+    },
+    alternates: {
+      canonical: `/beliefs/${belief.id}`,
+    },
+  };
+}
 
 export default async function BeliefDetailPage({ params }: BeliefDetailPageProps) {
   const { id } = await params;

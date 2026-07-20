@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CategoryCard } from "@/components/category-card";
@@ -6,10 +7,17 @@ import { LeadBeliefSpotlight } from "@/components/lead-belief-spotlight";
 import { SectionHeading } from "@/components/section-heading";
 import { getCoreTenBeliefs } from "@/lib/belief-collections";
 import { groupBeliefsByCategory } from "@/lib/categories";
+import { seoDefaults } from "@/lib/marketing-content";
 import { foundingRule, platformChannels, processSteps } from "@/lib/site-content";
 import { getBeliefs } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: { absolute: seoDefaults.defaultTitle },
+  description: seoDefaults.defaultDescription,
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
   const beliefs = await getBeliefs();
@@ -33,6 +41,20 @@ export default async function Home() {
               challenges, and records whether each belief remains unchanged, becomes refined, or must
               change under the weight of stronger evidence.
             </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/start"
+                className="rounded-full border border-sky-400/40 bg-sky-400/15 px-6 py-3 text-sm font-semibold text-sky-100 hover:bg-sky-400/25"
+              >
+                Start here — find your path
+              </Link>
+              <Link
+                href="/beliefs"
+                className="rounded-full border border-slate-700 px-6 py-3 text-sm text-slate-200 hover:border-sky-400/40"
+              >
+                Browse beliefs
+              </Link>
+            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:max-w-md lg:grid-cols-1">
